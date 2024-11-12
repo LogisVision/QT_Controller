@@ -1,0 +1,979 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1024</width>
+    <height>608</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>10</y>
+      <width>991</width>
+      <height>521</height>
+     </rect>
+    </property>
+    <property name="tabPosition">
+     <enum>QTabWidget::TabPosition::West</enum>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>MAIN</string>
+     </attribute>
+     <widget class="QPushButton" name="btn_right">
+      <property name="geometry">
+       <rect>
+        <x>270</x>
+        <y>350</y>
+        <width>121</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Right</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_mid">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>350</y>
+        <width>121</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Mid</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_go">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>290</y>
+        <width>121</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Go</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_left">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>350</y>
+        <width>121</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Left</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_back">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>410</y>
+        <width>121</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Back</string>
+      </property>
+     </widget>
+     <widget class="QSlider" name="slider_cam">
+      <property name="geometry">
+       <rect>
+        <x>760</x>
+        <y>250</y>
+        <width>51</width>
+        <height>160</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QSlider::handle:vertical {
+    width: 15px; /* 원하는 가로 크기 */
+    height: 15px; /* 원하는 세로 크기 */
+    background-color: white; /* 핸들 색상 */
+    border-radius: 7px; /* 둥근 모서리 */
+}</string>
+      </property>
+      <property name="minimum">
+       <number>-40</number>
+      </property>
+      <property name="maximum">
+       <number>25</number>
+      </property>
+      <property name="singleStep">
+       <number>1</number>
+      </property>
+      <property name="value">
+       <number>-7</number>
+      </property>
+      <property name="sliderPosition">
+       <number>-7</number>
+      </property>
+      <property name="tracking">
+       <bool>true</bool>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Orientation::Vertical</enum>
+      </property>
+      <property name="tickPosition">
+       <enum>QSlider::TickPosition::TicksAbove</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_angle">
+      <property name="geometry">
+       <rect>
+        <x>740</x>
+        <y>420</y>
+        <width>81</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>CAM Angle</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QSlider" name="slider_arm_1">
+      <property name="geometry">
+       <rect>
+        <x>830</x>
+        <y>250</y>
+        <width>51</width>
+        <height>160</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QSlider::handle:vertical {
+    width: 15px; /* 원하는 가로 크기 */
+    height: 15px; /* 원하는 세로 크기 */
+    background-color: white; /* 핸들 색상 */
+    border-radius: 7px; /* 둥근 모서리 */
+}</string>
+      </property>
+      <property name="minimum">
+       <number>85</number>
+      </property>
+      <property name="maximum">
+       <number>500</number>
+      </property>
+      <property name="pageStep">
+       <number>1</number>
+      </property>
+      <property name="value">
+       <number>100</number>
+      </property>
+      <property name="sliderPosition">
+       <number>100</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Orientation::Vertical</enum>
+      </property>
+      <property name="tickPosition">
+       <enum>QSlider::TickPosition::TicksAbove</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_arm_1">
+      <property name="geometry">
+       <rect>
+        <x>810</x>
+        <y>420</y>
+        <width>81</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>X</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_arm_2">
+      <property name="geometry">
+       <rect>
+        <x>880</x>
+        <y>420</y>
+        <width>81</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Y</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QSlider" name="slider_arm_2">
+      <property name="geometry">
+       <rect>
+        <x>900</x>
+        <y>250</y>
+        <width>51</width>
+        <height>160</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QSlider::handle:vertical {
+    width: 15px; /* 원하는 가로 크기 */
+    height: 15px; /* 원하는 세로 크기 */
+    background-color: white; /* 핸들 색상 */
+    border-radius: 7px; /* 둥근 모서리 */
+}</string>
+      </property>
+      <property name="minimum">
+       <number>-50</number>
+      </property>
+      <property name="maximum">
+       <number>50</number>
+      </property>
+      <property name="pageStep">
+       <number>10</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Orientation::Vertical</enum>
+      </property>
+      <property name="tickPosition">
+       <enum>QSlider::TickPosition::TicksAbove</enum>
+      </property>
+     </widget>
+     <widget class="QSlider" name="slider_grab">
+      <property name="geometry">
+       <rect>
+        <x>440</x>
+        <y>320</y>
+        <width>261</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QSlider::handle:horizontal {
+    width: 15px; /* 원하는 가로 크기 */
+    height: 15px; /* 원하는 세로 크기 */
+    background-color: white; /* 핸들 색상 */
+    border-radius: 7px; /* 둥근 모서리 */
+}
+
+QSlider::handle:vertical {
+    width: 15px; /* 원하는 가로 크기 */
+    height: 15px; /* 원하는 세로 크기 */
+    background-color: #3498db; /* 핸들 색상 */
+    border-radius: 7px; /* 둥근 모서리 */
+}</string>
+      </property>
+      <property name="minimum">
+       <number>0</number>
+      </property>
+      <property name="maximum">
+       <number>90</number>
+      </property>
+      <property name="sliderPosition">
+       <number>0</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Orientation::Horizontal</enum>
+      </property>
+      <property name="tickPosition">
+       <enum>QSlider::TickPosition::TicksAbove</enum>
+      </property>
+      <property name="tickInterval">
+       <number>20</number>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_cam_angle">
+      <property name="geometry">
+       <rect>
+        <x>760</x>
+        <y>220</y>
+        <width>51</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:white;</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::NoFrame</enum>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_arm_1_value">
+      <property name="geometry">
+       <rect>
+        <x>830</x>
+        <y>220</y>
+        <width>51</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:white;</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::NoFrame</enum>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_arm_2_value">
+      <property name="geometry">
+       <rect>
+        <x>900</x>
+        <y>220</y>
+        <width>51</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:white;</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::NoFrame</enum>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QSlider" name="slider_arm">
+      <property name="geometry">
+       <rect>
+        <x>440</x>
+        <y>390</y>
+        <width>261</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QSlider::handle:horizontal {
+    width: 15px; /* 원하는 가로 크기 */
+    height: 15px; /* 원하는 세로 크기 */
+    background-color: white; /* 핸들 색상 */
+    border-radius: 7px; /* 둥근 모서리 */
+}
+
+QSlider::handle:vertical {
+    width: 15px; /* 원하는 가로 크기 */
+    height: 15px; /* 원하는 세로 크기 */
+    background-color: #3498db; /* 핸들 색상 */
+    border-radius: 7px; /* 둥근 모서리 */
+}</string>
+      </property>
+      <property name="minimum">
+       <number>-80</number>
+      </property>
+      <property name="maximum">
+       <number>80</number>
+      </property>
+      <property name="sliderPosition">
+       <number>0</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Orientation::Horizontal</enum>
+      </property>
+      <property name="tickPosition">
+       <enum>QSlider::TickPosition::TicksAbove</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_arm_left">
+      <property name="geometry">
+       <rect>
+        <x>410</x>
+        <y>430</y>
+        <width>81</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>LEFT</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_arm_right">
+      <property name="geometry">
+       <rect>
+        <x>660</x>
+        <y>430</y>
+        <width>81</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>RIGHT</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_grab">
+      <property name="geometry">
+       <rect>
+        <x>660</x>
+        <y>310</y>
+        <width>81</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>GRAB</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_auto">
+      <property name="geometry">
+       <rect>
+        <x>750</x>
+        <y>20</y>
+        <width>191</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>AUTO</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_manual">
+      <property name="geometry">
+       <rect>
+        <x>750</x>
+        <y>100</y>
+        <width>191</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>MANUAL</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_cam">
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>20</y>
+        <width>401</width>
+        <height>261</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::Box</enum>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>DATA BASE</string>
+     </attribute>
+     <widget class="QWidget" name="widget_web" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>921</width>
+        <height>451</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_3">
+     <attribute name="title">
+      <string>LOG DATA</string>
+     </attribute>
+     <widget class="QPlainTextEdit" name="logText">
+      <property name="geometry">
+       <rect>
+        <x>880</x>
+        <y>10</y>
+        <width>41</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>50</y>
+        <width>321</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>command Table</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>580</x>
+        <y>40</y>
+        <width>189</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>sensing Table</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QPlainTextEdit" name="sensingText">
+      <property name="geometry">
+       <rect>
+        <x>880</x>
+        <y>50</y>
+        <width>51</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="stopButton">
+      <property name="geometry">
+       <rect>
+        <x>540</x>
+        <y>420</y>
+        <width>171</width>
+        <height>40</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Stop</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="startButton">
+      <property name="geometry">
+       <rect>
+        <x>260</x>
+        <y>420</y>
+        <width>187</width>
+        <height>40</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Start</string>
+      </property>
+     </widget>
+     <widget class="QTableWidget" name="table_log">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>100</y>
+        <width>401</width>
+        <height>311</height>
+       </rect>
+      </property>
+      <property name="columnCount">
+       <number>4</number>
+      </property>
+      <attribute name="horizontalHeaderVisible">
+       <bool>true</bool>
+      </attribute>
+      <attribute name="horizontalHeaderHighlightSections">
+       <bool>true</bool>
+      </attribute>
+      <column>
+       <property name="text">
+        <string>Time</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Command</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Value</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>State</string>
+       </property>
+      </column>
+     </widget>
+     <widget class="QTableWidget" name="table_sensing">
+      <property name="geometry">
+       <rect>
+        <x>430</x>
+        <y>100</y>
+        <width>481</width>
+        <height>311</height>
+       </rect>
+      </property>
+      <property name="columnCount">
+       <number>5</number>
+      </property>
+      <attribute name="horizontalHeaderVisible">
+       <bool>true</bool>
+      </attribute>
+      <attribute name="horizontalHeaderHighlightSections">
+       <bool>true</bool>
+      </attribute>
+      <column>
+       <property name="text">
+        <string>Time</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Num1</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Num2</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Is_Finish</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Mode</string>
+       </property>
+      </column>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_4">
+     <attribute name="title">
+      <string>Page</string>
+     </attribute>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1024</width>
+     <height>38</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>btn_left</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>left()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>136</x>
+     <y>404</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>117</x>
+     <y>457</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_right</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>right()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>404</x>
+     <y>405</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>462</x>
+     <y>434</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_go</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>go()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>288</x>
+     <y>374</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>443</x>
+     <y>332</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_mid</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>mid()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>272</x>
+     <y>401</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>361</x>
+     <y>447</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_back</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>back()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>280</x>
+     <y>469</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>313</x>
+     <y>486</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slider_cam</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>label_cam_angle</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>820</x>
+     <y>408</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>813</x>
+     <y>288</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slider_arm_1</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>label_arm_1_value</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>897</x>
+     <y>370</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>892</x>
+     <y>272</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slider_arm_2</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>label_arm_2_value</receiver>
+   <slot>setNum(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>967</x>
+     <y>361</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>968</x>
+     <y>273</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slider_cam</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>camera_angle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>839</x>
+     <y>334</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>657</x>
+     <y>42</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slider_grab</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>grab()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>563</x>
+     <y>388</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>470</x>
+     <y>42</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slider_arm</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>turn_angle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>633</x>
+     <y>457</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>606</x>
+     <y>532</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slider_arm_1</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>arm_1()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>910</x>
+     <y>332</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>897</x>
+     <y>42</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slider_arm_2</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>arm_2()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>988</x>
+     <y>336</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>979</x>
+     <y>44</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>go()</slot>
+  <slot>mid()</slot>
+  <slot>back()</slot>
+  <slot>left()</slot>
+  <slot>right()</slot>
+  <slot>start()</slot>
+  <slot>stop()</slot>
+  <slot>camera_angle()</slot>
+  <slot>grab()</slot>
+  <slot>turn_angle()</slot>
+  <slot>arm_1()</slot>
+  <slot>arm_2()</slot>
+ </slots>
+</ui>
