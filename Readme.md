@@ -1,4 +1,4 @@
-# Logis Vision Web Platform
+# Logis Vision QT Controller
 
 ## 프로젝트 개요
 
