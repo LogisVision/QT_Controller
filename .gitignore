@@ -1,3 +1,4 @@
 # PyCharm project files
 .idea
+.qtcreator
 venv
