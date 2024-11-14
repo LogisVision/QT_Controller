@@ -11,7 +11,7 @@ import numpy as np
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel,QTableWidget, QTableWidgetItem, QWidget
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtGui import QImage, QPixmap
-from PySide6.QtCore import QTimer, QUrl
+from PySide6.QtCore import QTimer, QUrl, QPoint
 
 import paho.mqtt.client as mqtt
 
@@ -43,8 +43,9 @@ class MainWindow(QMainWindow):
     # 얼굴의 실제 너비(cm)
     KNOWN_WIDTH = 14.0
     # 카메라의 초점 거리(픽셀 단위)
-    FOCAL_LENGTH = 1708.33
-
+    FOCAL_LENGTH = 389.12
+    servo_angle = 0
+    cam_angle = -7
     # 초기 연결 설정
     # mqtt로 들어온 data를 받아줄 list 생성
     sensorData = list()
@@ -230,22 +231,22 @@ class MainWindow(QMainWindow):
         faces = self.face_cascade.detectMultiScale(gray, 1.3,3)
 
         # Draw bounding box around each detected face
-        for (x, y, w, h) in faces:
+        #for (x, y, w, h) in faces:
             # Draw rectangle around face
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
+            #cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
             # Calculate the center of the bounding box
-            center_x, center_y = x + w // 2, y + h // 2
+            #center_x, center_y = x + w // 2, y + h // 2
             # Draw a small square at the center of the bounding box
-            cv2.rectangle(frame, (center_x - 15, center_y - 15), (center_x + 15, center_y + 15), (0, 255, 0), 2)
+            #cv2.rectangle(frame, (center_x - 15, center_y - 15), (center_x + 15, center_y + 15), (0, 255, 0), 2)
 
             # Display coordinates in line_x and line_y
             #self.ui.line_mouse_x.setText(str(center_x))
             #self.ui.line_mouse_y.setText(str(center_y))
 
             # 얼굴과의 거리 계산 (센티미터 단위)
-            distance_cm = (self.KNOWN_WIDTH * self.FOCAL_LENGTH) / w
-            self.ui.label_distance.setText(f"{distance_cm:.2f} cm")  # label_distance에 표시
+            #distance_cm = (self.KNOWN_WIDTH * self.FOCAL_LENGTH) / w
+            #self.ui.label_distance.setText(f"{distance_cm:.2f} cm")  # label_distance에 표시
 
             # Convert to RGB for display in QLabel
         #내장 캠 관련 처리 코드
@@ -418,6 +419,55 @@ class MainWindow(QMainWindow):
         self.settingUI()
 
 
+
+
+    # 얼굴 중심에 따라 서보 모터를 회전시키는 함수
+
+    def auto_rotate(self, face_center_x, face_center_y, widget_width, widget_height):
+        # Calculate the center x and y coordinates of label_cam
+        screen_center_x = widget_width // 2
+        screen_center_y = widget_height // 2
+
+        # Calculate the horizontal and vertical offsets from the center
+        offset_x = face_center_x - screen_center_x
+        offset_y = face_center_y - screen_center_y
+
+        # Set thresholds to avoid unnecessary adjustments when close to the center
+        threshold_x = 1
+        threshold_y = 1
+
+
+        # Horizontal adjustment (left/right rotation) using servo_angle
+        if offset_x < -threshold_x:
+            self.servo_angle -= 1
+            if self.servo_angle < -80:  # Lower limit for horizontal servo angle
+                self.servo_angle = -80
+        elif offset_x > threshold_x:
+            self.servo_angle += 1
+            if self.servo_angle > 80:  # Upper limit for horizontal servo angle
+                self.servo_angle = 80
+
+        """
+        if offset_y < -threshold_y:
+            self.cam_angle +=1
+            if self.cam_angle > 25 :
+                self.cam_angle = 25
+        elif offset_y > threshold_y:
+            self.cam_angle -=1
+            if self.cam_angle < -40:
+                self.cam_angle = -40
+        """
+
+        # Apply the calculated angles to the servo motor for horizontal alignment
+        # and to the camera for vertical alignment
+        self.rotate_arms(self.servo_angle)
+        #self.camera_angle(self.cam_angle)
+
+
+
+
+
+
     def rotate_arms(self, angle):
         command_data = self.makeCommandData("rotate_arms", angle, 1)
         self.client.publish(commandTopic, json.dumps(command_data), qos=1)
@@ -557,24 +607,37 @@ class MainWindow(QMainWindow):
 
                     # 그레이스케일 변환 및 얼굴 검출
                     gray_image = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                    try:
-                        faces = self.face_cascade.detectMultiScale(gray_image, 1.3, 3)
-                    except cv2.error as e:
-                        print("Cascade detection error:", e)
-                        faces = []
+                    faces = self.face_cascade.detectMultiScale(gray_image, 1.3, 3)
 
-                    # 검출된 얼굴에 사각형 그리기
-                    for (x, y, w, h) in faces:
+                    # 첫 번째 얼굴에 대해서만 처리
+                    if len(faces) > 0:
+                        x, y, w, h = faces[0]  # 첫 번째 얼굴 선택
+
                         # 얼굴 주위에 파란 사각형 그리기
-                        cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 3)
+                        cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
                         # 박스 중심 계산 및 중심에 작은 녹색 사각형 그리기
-                        center_x, center_y = x + w // 2, y + h // 2
-                        cv2.rectangle(frame, (center_x - 15, center_y - 15), (center_x + 15, center_y + 15), (0, 255, 0), 2)
+                        center_x = x + w // 2
+                        center_y = y + w // 2
+                        cv2.rectangle(frame, (center_x - 8, y + h // 2 - 8), (center_x + 8, y + h // 2 + 8), (0, 255, 0), 2)
+
+                        # 모터 회전을 위한 x축 오프셋 계산
+                        self.auto_rotate(center_x,center_y, self.ui.label_cam.width(),self.ui.label_cam.height())
+
+                        #self.auto_rotate(center_x, center_y, self.ui.label_cam.width(), self.ui.label_cam.height())
 
                         # 거리 계산
                         distance_cm = (self.KNOWN_WIDTH * self.FOCAL_LENGTH) / w
-                        self.ui.label_distance.setText(f"{distance_cm:.2f} cm")
+                        cv2.putText(
+                            frame,
+                            f"{distance_cm:.2f} cm",
+                            (x, y - 10),  # 텍스트 위치 (얼굴 상단 바로 위)
+                            cv2.FONT_HERSHEY_SIMPLEX,
+                            1.0,  # 텍스트 크기
+                            (0, 255, 0),  # 텍스트 색상 (녹색)
+                            2,  # 텍스트 두께
+                            cv2.LINE_AA,
+                        )
 
                     # Qt에 맞게 이미지 변환
                     rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -596,6 +659,11 @@ class MainWindow(QMainWindow):
 
         except Exception as e:
             print("Error in on_message:", e)
+
+
+
+
+
 
     def closeEvent(self, event):
             self.client.disconnect()
