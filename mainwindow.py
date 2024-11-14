@@ -40,6 +40,11 @@ cameraTopic = "AGV/camera"
 
 class MainWindow(QMainWindow):
 
+    # 얼굴의 실제 너비(cm)
+    KNOWN_WIDTH = 14.0
+    # 카메라의 초점 거리(픽셀 단위)
+    FOCAL_LENGTH = 1708.33
+
     # 초기 연결 설정
     # mqtt로 들어온 data를 받아줄 list 생성
     sensorData = list()
@@ -58,6 +63,22 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.init()
+
+        self.ui.label_touch.setMouseTracking(True)
+        self.ui.label_touch.mouseMoveEvent = self.update_mouse_position
+
+        #디버깅용 내장 카메라 코드
+        #self.cap = cv2.VideoCapture(0)  # Set to default camera
+        #self.timer = QTimer()
+        #self.timer.timeout.connect(self.update_frame)
+        #self.timer.start(30)  # Update every 30 ms
+        #여기까지 카메라 코드
+        # Load cascade file for face detection
+        self.face_cascade = cv2.CascadeClassifier('./haarcascade_frontalface_alt.xml')#cascade 모델
+
+
+        # btn_grab 클릭 시 move_arms 함수가 호출되도록 설정
+        self.ui.btn_grab.clicked.connect(self.on_grab_clicked)
 
         # 타이머를 사용해 주기적으로 프레임을 가져옵니다.
         #self.timer = QTimer()
@@ -96,11 +117,60 @@ class MainWindow(QMainWindow):
         self.web_view.show()
 
 
+    def on_grab_clicked(self):
+        # btn_grab 클릭 시 특정 x, y 좌표로 move_arms 호출
+        x = 100  # 원하는 x 좌표
+        y = 50   # 원하는 y 좌표
+        self.move_arms(y)
+
+
     def init(self):
         print("init")
 
     def load_url(self, url):
         self.web_view.setUrl(QUrl(url))
+
+    def update_mouse_position(self, event):
+        # label_cam의 크기 가져오기
+        widget_width = self.ui.label_touch.width()
+        widget_height = self.ui.label_touch.height()
+
+        # 마우스의 절대 좌표를 중심 기준 좌표로 변환
+        x = int(event.position().x() - widget_width / 2)
+        y = int(event.position().y() - widget_height / 2)
+
+        # Print debug info to confirm the coordinates
+        print(f"Mouse position: x={x}, y={y}")
+
+        # x 좌표를 이용해 회전 각도를 계산하여 rotate_arms 호출
+        angle = self.calculate_rotate_angle(x, widget_width)
+        self.rotate_arms(angle)
+
+        # y 좌표를 활용하여 팔 이동
+        self.move_arms(y)
+
+
+        # 중심을 기준으로 변환된 좌표를 UI에 표시
+        self.ui.label_mouse_x.setText("X: "+str(x))
+        self.ui.label_mouse_y.setText(str(y))
+
+    def calculate_rotate_angle(self, x, widget_width):
+        """
+        중심을 기준으로 변환된 x 좌표를 회전 각도로 변환하는 함수
+        x: 중심 기준으로 변환된 마우스 x 좌표
+        widget_width: label_cam의 전체 너비
+        """
+        # 회전 각도의 범위 설정
+        max_angle = 80
+        min_angle = -80
+
+        # x 좌표를 -80 ~ 80 사이로 매핑
+        angle = int((x / (widget_width / 2)) * (max_angle - min_angle) / 2)
+        return angle
+
+
+    def send_xy_set(self, x, y):
+        pass
 
     def start(self):
         # MQTT 클라이언트 생성
@@ -108,7 +178,7 @@ class MainWindow(QMainWindow):
         # 연결 시 콜백 함수 설정
         self.client.on_connect = self.on_connect
         # 메시지 수신 시 콜백 함수 설정
-        self.client.on_message = self.on_message
+        self.client.on_message =  self.on_message
 
         # Broker IP, port 연결
         self.client.connect(address, port)
@@ -156,6 +226,40 @@ class MainWindow(QMainWindow):
         if not ret:
             return
 
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        faces = self.face_cascade.detectMultiScale(gray, 1.3,3)
+
+        # Draw bounding box around each detected face
+        for (x, y, w, h) in faces:
+            # Draw rectangle around face
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
+
+            # Calculate the center of the bounding box
+            center_x, center_y = x + w // 2, y + h // 2
+            # Draw a small square at the center of the bounding box
+            cv2.rectangle(frame, (center_x - 15, center_y - 15), (center_x + 15, center_y + 15), (0, 255, 0), 2)
+
+            # Display coordinates in line_x and line_y
+            #self.ui.line_mouse_x.setText(str(center_x))
+            #self.ui.line_mouse_y.setText(str(center_y))
+
+            # 얼굴과의 거리 계산 (센티미터 단위)
+            distance_cm = (self.KNOWN_WIDTH * self.FOCAL_LENGTH) / w
+            self.ui.label_distance.setText(f"{distance_cm:.2f} cm")  # label_distance에 표시
+
+            # Convert to RGB for display in QLabel
+        #내장 캠 관련 처리 코드
+        #rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        #h, w, ch = rgb_image.shape
+        #bytes_per_line = ch * w
+        #qt_image = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
+
+        # Update QLabel with the new frame
+        #pixmap = QPixmap.fromImage(qt_image)
+        #self.ui.label_cam.setPixmap(pixmap.scaled(self.ui.label_cam.size()))
+
+
+        """
         # OpenCV BGR 포맷을 Qt가 사용하는 RGB 포맷으로 변환
         rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         h, w, ch = rgb_image.shape
@@ -168,6 +272,7 @@ class MainWindow(QMainWindow):
 
         # QLabel에 QPixmap 표시
         self.ui.label_cam.setPixmap(scaled_pixmap)
+        """
 
     def closeEvent(self, event):
         # 프로그램 종료 시 카메라 해제
@@ -186,6 +291,7 @@ class MainWindow(QMainWindow):
             self.ui.table_log.setItem(row_position, 2, QTableWidgetItem(str(commandData["arg_string"])))
             self.ui.table_log.setItem(row_position, 3, QTableWidgetItem(str(commandData["is_finish"])))
 
+
     def update_sensing_table(self):
         self.ui.table_sensing.setRowCount(0)  # 기존 내용을 지우기 위해 행 수를 0으로 설정
         for i, data in enumerate(self.sensingDataList):
@@ -198,6 +304,18 @@ class MainWindow(QMainWindow):
             self.ui.table_sensing.setItem(row_position, 2, QTableWidgetItem(str(data.get("num2", ""))))
             self.ui.table_sensing.setItem(row_position, 3, QTableWidgetItem(str(data.get("is_finish", ""))))
             self.ui.table_sensing.setItem(row_position, 4, QTableWidgetItem(data.get("manual_mode", "")))
+
+
+
+    def mode_auto(self):
+        # AUTO 버튼이 활성화되면 MANUAL 버튼 비활성화
+        if self.ui.btn_auto.isChecked():
+            self.ui.btn_manual.setChecked(False)
+
+    def mode_manual(self):
+        # MANUAL 버튼이 활성화되면 AUTO 버튼 비활성화
+        if self.ui.btn_manual.isChecked():
+            self.ui.btn_auto.setChecked(False)
 
     def go(self):
         self.commandData = self.makeCommandData("go", 100, 1)
@@ -262,8 +380,21 @@ class MainWindow(QMainWindow):
         self.settingUI()
         print(f"Sent grab_angle command with angle: {angle}")
 
+
+    def slide_x_plus(self) :
+        self.ui.slider_arm_1.setValue(self.ui.slider_arm_1.value() + 1)
+
+    def slide_x_minus(self) :
+        self.ui.slider_arm_1.setValue(self.ui.slider_arm_1.value() - 1)
+
+    def slide_y_plus(self) :
+        self.ui.slider_arm_2.setValue(self.ui.slider_arm_2.value() + 1)
+
+    def slide_y_minus(self) :
+        self.ui.slider_arm_2.setValue(self.ui.slider_arm_2.value() - 1)
+
     def arm_1(self, angle) :
-        mapped_angle = angle
+        mapped_angle = angle#- 130
         command_data = self.makeCommandData("arm1", mapped_angle, 1)
         self.client.publish(commandTopic, json.dumps(command_data), qos=1)
         self.commandDataList.append(command_data)
@@ -272,6 +403,29 @@ class MainWindow(QMainWindow):
     def arm_2(self, angle) :
         mapped_angle = angle
         command_data = self.makeCommandData("arm2", mapped_angle, 1)
+        self.client.publish(commandTopic, json.dumps(command_data), qos=1)
+        self.commandDataList.append(command_data)
+        self.settingUI()
+
+    def move_arms(self,y) :
+        # `x`, `y` 좌표로 명령 데이터를 생성하고 MQTT로 전송
+        #xy_values = f"{x},{y}"
+        command_data = self.makeCommandData("move_arms", y, 1)
+        # MQTT 토픽으로 좌표 데이터를 JSON 형식으로 전송
+        self.client.publish(commandTopic, json.dumps(command_data), qos=1)
+        # 명령 데이터 저장 및 UI 업데이트
+        self.commandDataList.append(command_data)
+        self.settingUI()
+
+
+    def rotate_arms(self, angle):
+        command_data = self.makeCommandData("rotate_arms", angle, 1)
+        self.client.publish(commandTopic, json.dumps(command_data), qos=1)
+        self.commandDataList.append(command_data)
+        self.settingUI()
+
+    def set_reset(self):
+        command_data = self.makeCommandData("reset", 0, 1)
         self.client.publish(commandTopic, json.dumps(command_data), qos=1)
         self.commandDataList.append(command_data)
         self.settingUI()
@@ -294,6 +448,8 @@ class MainWindow(QMainWindow):
 
         print("save data")
         event.accept()
+
+
 
 
 
@@ -342,6 +498,10 @@ class MainWindow(QMainWindow):
     #         self.sensingDataList = self.sensorData[-15:]
     #         self.update_sensing_table()
 
+
+
+    # mqtt 카메라 영상 수신 및 처리
+    """
     def on_message(self, client, userdata, msg):
         if msg.topic == cameraTopic:
             jpg_as_np = np.frombuffer(msg.payload, dtype=np.uint8)
@@ -349,6 +509,25 @@ class MainWindow(QMainWindow):
 
             if frame is not None:
                 print("Received frame size:", frame.shape)  # 디버깅: 디코딩된 이미지 크기 확인
+                gray_image = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                faces = self.face_cascade.detectMultiScale(gray_image, 1.3,3)
+
+                # Bounding box 그리기
+                for (x,y,w,h) in faces :
+                    #얼굴 주변 박스
+                    cv2.rectangle(frame, (x,y), (x+w,y+h),(255,0,0),3)
+
+                    # 박스 중심 계산
+                    center_x, center_y = x+w //2, y+h//2
+                    # 작은 중심박스
+                    cv2.rectangle(frame, (center_x - 15, center_y - 15), (center_x + 15, center_y + 15), (0, 255, 0), 2)
+
+                    # Calculate distance in centimeters (assuming face width in cm and focal length are known)
+                    distance_cm = (self.KNOWN_WIDTH * self.FOCAL_LENGTH) / w
+                    self.ui.label_distance.setText(f"{distance_cm:.2f} cm")
+
+
+
                 rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 h, w, ch = rgb_image.shape
                 bytes_per_line = ch * w
@@ -364,8 +543,59 @@ class MainWindow(QMainWindow):
             self.sensorData.append(data)
             self.sensingDataList = self.sensorData[-15:]
             self.update_sensing_table()
+    """
 
 
+    def on_message(self, client, userdata, msg):
+        try:
+            if msg.topic == cameraTopic:
+                jpg_as_np = np.frombuffer(msg.payload, dtype=np.uint8)
+                frame = cv2.imdecode(jpg_as_np, cv2.IMREAD_COLOR)
+
+                if frame is not None:
+                    print("Received frame size:", frame.shape)  # 디버깅: 디코딩된 이미지 크기 확인
+
+                    # 그레이스케일 변환 및 얼굴 검출
+                    gray_image = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                    try:
+                        faces = self.face_cascade.detectMultiScale(gray_image, 1.3, 3)
+                    except cv2.error as e:
+                        print("Cascade detection error:", e)
+                        faces = []
+
+                    # 검출된 얼굴에 사각형 그리기
+                    for (x, y, w, h) in faces:
+                        # 얼굴 주위에 파란 사각형 그리기
+                        cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 3)
+
+                        # 박스 중심 계산 및 중심에 작은 녹색 사각형 그리기
+                        center_x, center_y = x + w // 2, y + h // 2
+                        cv2.rectangle(frame, (center_x - 15, center_y - 15), (center_x + 15, center_y + 15), (0, 255, 0), 2)
+
+                        # 거리 계산
+                        distance_cm = (self.KNOWN_WIDTH * self.FOCAL_LENGTH) / w
+                        self.ui.label_distance.setText(f"{distance_cm:.2f} cm")
+
+                    # Qt에 맞게 이미지 변환
+                    rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                    h, w, ch = rgb_image.shape
+                    bytes_per_line = ch * w
+                    qt_image = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
+                    pixmap = QPixmap.fromImage(qt_image)
+                    self.ui.label_cam.setPixmap(pixmap.scaled(self.ui.label_cam.size()))
+                else:
+                    print("Failed to decode the image")
+            else:
+                try:
+                    data = json.loads(msg.payload.decode("utf-8"))
+                    self.sensorData.append(data)
+                    self.sensingDataList = self.sensorData[-15:]
+                    self.update_sensing_table()
+                except json.JSONDecodeError as e:
+                    print("JSON decoding error:", e)
+
+        except Exception as e:
+            print("Error in on_message:", e)
 
     def closeEvent(self, event):
             self.client.disconnect()
