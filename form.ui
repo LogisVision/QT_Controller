@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1024</width>
-    <height>608</height>
+    <height>775</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -21,7 +21,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>10</y>
+      <y>80</y>
       <width>991</width>
       <height>521</height>
      </rect>
@@ -523,8 +523,8 @@ QSlider::handle:vertical {
      <widget class="QLabel" name="label_cam">
       <property name="geometry">
        <rect>
-        <x>159</x>
-        <y>20</y>
+        <x>160</x>
+        <y>30</y>
         <width>481</width>
         <height>251</height>
        </rect>
@@ -618,9 +618,9 @@ QSlider::handle:vertical {
       <property name="geometry">
        <rect>
         <x>650</x>
-        <y>80</y>
+        <y>190</y>
         <width>81</width>
-        <height>191</height>
+        <height>81</height>
        </rect>
       </property>
       <property name="text">
@@ -722,6 +722,19 @@ QSlider::handle:vertical {
       </property>
       <property name="text">
        <string>Y : </string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btn_grab_2">
+      <property name="geometry">
+       <rect>
+        <x>650</x>
+        <y>100</y>
+        <width>81</width>
+        <height>81</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>SET ARM</string>
       </property>
      </widget>
     </widget>
@@ -961,7 +974,7 @@ QSlider::handle:vertical {
    <hints>
     <hint type="sourcelabel">
      <x>136</x>
-     <y>404</y>
+     <y>474</y>
     </hint>
     <hint type="destinationlabel">
      <x>117</x>
@@ -977,7 +990,7 @@ QSlider::handle:vertical {
    <hints>
     <hint type="sourcelabel">
      <x>404</x>
-     <y>405</y>
+     <y>475</y>
     </hint>
     <hint type="destinationlabel">
      <x>462</x>
@@ -993,7 +1006,7 @@ QSlider::handle:vertical {
    <hints>
     <hint type="sourcelabel">
      <x>286</x>
-     <y>391</y>
+     <y>461</y>
     </hint>
     <hint type="destinationlabel">
      <x>443</x>
@@ -1009,7 +1022,7 @@ QSlider::handle:vertical {
    <hints>
     <hint type="sourcelabel">
      <x>272</x>
-     <y>401</y>
+     <y>471</y>
     </hint>
     <hint type="destinationlabel">
      <x>361</x>
@@ -1025,7 +1038,7 @@ QSlider::handle:vertical {
    <hints>
     <hint type="sourcelabel">
      <x>280</x>
-     <y>469</y>
+     <y>539</y>
     </hint>
     <hint type="destinationlabel">
      <x>313</x>
@@ -1045,7 +1058,7 @@ QSlider::handle:vertical {
     </hint>
     <hint type="destinationlabel">
      <x>813</x>
-     <y>288</y>
+     <y>358</y>
     </hint>
    </hints>
   </connection>
@@ -1057,11 +1070,11 @@ QSlider::handle:vertical {
    <hints>
     <hint type="sourcelabel">
      <x>897</x>
-     <y>370</y>
+     <y>440</y>
     </hint>
     <hint type="destinationlabel">
      <x>892</x>
-     <y>272</y>
+     <y>342</y>
     </hint>
    </hints>
   </connection>
@@ -1073,11 +1086,11 @@ QSlider::handle:vertical {
    <hints>
     <hint type="sourcelabel">
      <x>967</x>
-     <y>361</y>
+     <y>431</y>
     </hint>
     <hint type="destinationlabel">
      <x>968</x>
-     <y>273</y>
+     <y>343</y>
     </hint>
    </hints>
   </connection>
@@ -1105,7 +1118,7 @@ QSlider::handle:vertical {
    <hints>
     <hint type="sourcelabel">
      <x>563</x>
-     <y>388</y>
+     <y>458</y>
     </hint>
     <hint type="destinationlabel">
      <x>470</x>
@@ -1121,7 +1134,7 @@ QSlider::handle:vertical {
    <hints>
     <hint type="sourcelabel">
      <x>633</x>
-     <y>457</y>
+     <y>527</y>
     </hint>
     <hint type="destinationlabel">
      <x>606</x>
@@ -1169,7 +1182,7 @@ QSlider::handle:vertical {
    <hints>
     <hint type="sourcelabel">
      <x>896</x>
-     <y>491</y>
+     <y>561</y>
     </hint>
     <hint type="destinationlabel">
      <x>895</x>
@@ -1185,7 +1198,7 @@ QSlider::handle:vertical {
    <hints>
     <hint type="sourcelabel">
      <x>896</x>
-     <y>271</y>
+     <y>341</y>
     </hint>
     <hint type="destinationlabel">
      <x>793</x>
@@ -1201,11 +1214,11 @@ QSlider::handle:vertical {
    <hints>
     <hint type="sourcelabel">
      <x>966</x>
-     <y>271</y>
+     <y>341</y>
     </hint>
     <hint type="destinationlabel">
      <x>983</x>
-     <y>-6</y>
+     <y>0</y>
     </hint>
    </hints>
   </connection>
@@ -1217,7 +1230,7 @@ QSlider::handle:vertical {
    <hints>
     <hint type="sourcelabel">
      <x>962</x>
-     <y>479</y>
+     <y>549</y>
     </hint>
     <hint type="destinationlabel">
      <x>963</x>
@@ -1233,7 +1246,7 @@ QSlider::handle:vertical {
    <hints>
     <hint type="sourcelabel">
      <x>145</x>
-     <y>102</y>
+     <y>172</y>
     </hint>
     <hint type="destinationlabel">
      <x>139</x>
@@ -1249,7 +1262,7 @@ QSlider::handle:vertical {
    <hints>
     <hint type="sourcelabel">
      <x>746</x>
-     <y>121</y>
+     <y>191</y>
     </hint>
     <hint type="destinationlabel">
      <x>268</x>
@@ -1265,11 +1278,11 @@ QSlider::handle:vertical {
    <hints>
     <hint type="sourcelabel">
      <x>165</x>
-     <y>191</y>
+     <y>261</y>
     </hint>
     <hint type="destinationlabel">
      <x>866</x>
-     <y>-6</y>
+     <y>0</y>
     </hint>
    </hints>
   </connection>
@@ -1281,11 +1294,27 @@ QSlider::handle:vertical {
    <hints>
     <hint type="sourcelabel">
      <x>165</x>
-     <y>261</y>
+     <y>331</y>
     </hint>
     <hint type="destinationlabel">
      <x>715</x>
-     <y>-4</y>
+     <y>0</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_grab_2</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>arm_set()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>707</x>
+     <y>247</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>543</x>
+     <y>74</y>
     </hint>
    </hints>
   </connection>
@@ -1311,5 +1340,7 @@ QSlider::handle:vertical {
   <slot>send_xy_set()</slot>
   <slot>mode_auto()</slot>
   <slot>mode_manual()</slot>
+  <slot>arm_set()</slot>
+  <slot>target_grab()</slot>
  </slots>
 </ui>
