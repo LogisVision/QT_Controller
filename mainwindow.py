@@ -79,6 +79,7 @@ class MainWindow(QMainWindow):
         # 객체 인식을 위한 Cascade 모델 로드
         self.target_cascade = cv2.CascadeClassifier("haarcascade_frontalface_alt.xml")
 
+        self.auto_mode_active = False
         # 타이머 설정
 
 
@@ -130,20 +131,48 @@ class MainWindow(QMainWindow):
             # QLabel의 중심 좌표 계산
             widget_width = self.ui.label_cam.width()
             widget_height = self.ui.label_cam.height()
-            label_center_x = widget_width // 2
-            label_center_y = widget_height // 2
+
 
             for (x, y, w, h) in targets:
                 # 사각형 그리기
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
                 # 객체 중심 좌표
-                face_center_x = x + w // 2
-                face_center_y = y + h // 2
+                target_center_x = x + w // 2
+                target_center_y = y + h // 2
+
+                screen_center_x = widget_width // 2
+                screen_center_y = widget_height // 2
 
                 # 중심에서의 오프셋 계산
-                offset_x = int(face_center_x - label_center_x)
-                offset_y = int(face_center_y - label_center_y)
+                offset_x = int(target_center_x - screen_center_x)
+                offset_y = int(target_center_y - screen_center_y)*(-1)
+
+                threshold_x = 1
+                threshold_y = 1
+
+                """
+                # Horizontal adjustment (left/right rotation) using servo_angle
+                if offset_x < -threshold_x:
+                    self.servo_angle -= 1
+                    if self.servo_angle < -80:  # Lower limit for horizontal servo angle
+                        self.servo_angle = -80
+                elif offset_x > threshold_x:
+                    self.servo_angle += 1
+                    if self.servo_angle > 80:  # Upper limit for horizontal servo angle
+                        self.servo_angle = 80
+
+                if offset_y < -threshold_y:
+                    self.cam_angle +=1
+                    if self.cam_angle > 25 :
+                        self.cam_angle = 25
+                elif offset_y > threshold_y:
+                    self.cam_angle -=1
+                    if self.cam_angle < -40:
+                        self.cam_angle = -40
+                """
+
+
 
                 # 거리 계산
                 distance_cm = (KNOWN_WIDTH * FOCAL_LENGTH) / w
@@ -151,15 +180,15 @@ class MainWindow(QMainWindow):
 
                 # Automode 활성화 상태에서 MQTT로 송신
                 if getattr(self, "auto_mode_active", False):
-                    movement_data = {"offset_x": offset_x, "offset_y": offset_y}
+                    movement_data = {"x": offset_x, "y": offset_y}
                     self.client.publish("AGV/auto_mode", json.dumps(movement_data))
                     print(f"Sent offset data: {movement_data}")
 
                 # 객체 중심점 표시
                 cv2.rectangle(
                     frame,
-                    (face_center_x - 5, face_center_y - 5),
-                    (face_center_x + 5, face_center_y + 5),
+                    (target_center_x - 5, target_center_y - 5),
+                    (target_center_x + 5, target_center_y + 5),
                     (0, 255, 0),
                     2,
                 )
@@ -244,33 +273,33 @@ class MainWindow(QMainWindow):
             self.ui.table_sensing.setItem(row_position, 4, QTableWidgetItem(data.get("manual_mode", "")))
 
 
-    def turn_angle(self, offset_x):
-        """
-        좌우 각도 조정을 위한 turnAngle 함수 호출
-        """
-        # offset_x를 각도로 변환 (가중치 적용 가능)
-        turn_value = self.servo_angle + offset_x // 10
-        turn_value = max(min(turn_value, 80), -80)  # 각도 제한
-        self.servo_angle = turn_value
+    # def turn_angle(self, offset_x):
+    #     """
+    #     좌우 각도 조정을 위한 turnAngle 함수 호출
+    #     """
+    #     # offset_x를 각도로 변환 (가중치 적용 가능)
+    #     turn_value = self.servo_angle + offset_x // 10
+    #     turn_value = max(min(turn_value, 80), -80)  # 각도 제한
+    #     self.servo_angle = turn_value
 
-        # MQTT로 turnAngle 명령 전송
-        command_data = self.makeCommandData("camera_turn_angle", turn_value, 1)
-        self.client.publish(commandTopic, json.dumps(command_data), qos=1)
-        print(f"Sent turn_angle command: {turn_value}")
+    #     # MQTT로 turnAngle 명령 전송
+    #     command_data = self.makeCommandData("camera_turn_angle", turn_value, 1)
+    #     self.client.publish(commandTopic, json.dumps(command_data), qos=1)
+    #     print(f"Sent turn_angle command: {turn_value}")
 
-    def camera_angle(self, offset_y):
-        """
-        상하 각도 조정을 위한 camAngle 함수 호출
-        """
-        # offset_y를 각도로 변환 (가중치 적용 가능)
-        cam_value = self.cam_angle - offset_y // 10
-        cam_value = max(min(cam_value, 25), -40)  # 각도 제한
-        self.cam_angle = cam_value
+    # def camera_angle(self, offset_y):
+    #     """
+    #     상하 각도 조정을 위한 camAngle 함수 호출
+    #     """
+    #     # offset_y를 각도로 변환 (가중치 적용 가능)
+    #     cam_value = self.cam_angle - offset_y // 10
+    #     cam_value = max(min(cam_value, 25), -40)  # 각도 제한
+    #     self.cam_angle = cam_value
 
-        # MQTT로 camAngle 명령 전송
-        command_data = self.makeCommandData("camera_angle", cam_value, 1)
-        self.client.publish(commandTopic, json.dumps(command_data), qos=1)
-        print(f"Sent camera_angle command: {cam_value}")
+    #     # MQTT로 camAngle 명령 전송
+    #     command_data = self.makeCommandData("camera_angle", cam_value, 1)
+    #     self.client.publish(commandTopic, json.dumps(command_data), qos=1)
+    #     print(f"Sent camera_angle command: {cam_value}")
 
 
     def camera_angle(self, angle):

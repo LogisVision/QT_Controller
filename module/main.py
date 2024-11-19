@@ -1,4 +1,6 @@
 ### main.py
+import os
+import sys
 import paho.mqtt.client as mqtt
 import json
 import threading
@@ -37,7 +39,10 @@ def on_message(client, userdata, msg):
         if command == "AUTO_ON":
             auto_mode_active = True
             if automode_process is None:
-                automode_process = subprocess.Popen(["python3", "automode.py"])
+                # 절대 경로 사용
+                script_dir = os.path.dirname(os.path.abspath(__file__))
+                automode_path = os.path.join(script_dir, "automode.py")
+                automode_process = subprocess.Popen([sys.executable, automode_path])
             print("Auto mode process started.")
         elif command == "AUTO_OFF":
             auto_mode_active = False

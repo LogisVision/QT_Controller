@@ -199,7 +199,7 @@ class Ui_MainWindow(object):
         self.btn_manual.setCheckable(True)
         self.label_cam = QLabel(self.tab)
         self.label_cam.setObjectName(u"label_cam")
-        self.label_cam.setGeometry(QRect(160, 30, 481, 251))
+        self.label_cam.setGeometry(QRect(160, 30, 480, 250))
         self.label_cam.setMouseTracking(True)
         self.label_cam.setTabletTracking(True)
         self.label_cam.setFrameShape(QFrame.Shape.Box)

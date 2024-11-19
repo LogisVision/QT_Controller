@@ -525,8 +525,8 @@ QSlider::handle:vertical {
        <rect>
         <x>160</x>
         <y>30</y>
-        <width>481</width>
-        <height>251</height>
+        <width>480</width>
+        <height>250</height>
        </rect>
       </property>
       <property name="mouseTracking">
