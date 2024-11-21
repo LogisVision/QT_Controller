@@ -20,7 +20,8 @@ from queue import Queue
 korea_timezone = pytz.timezone("Asia/Seoul")
 
 # 브로커(라즈베리파이) 아이피 주소
-address = "172.20.10.9"
+# address = "172.20.10.9"
+address = "70.12.225.174"
 port = 1883
 
 # MQTT Topics
@@ -48,7 +49,7 @@ model = torch.hub.load('ultralytics/yolov5', 'custom', path=model_path)
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')  # GPU or CPU 선택
 model.to(device)  # 모델을 선택한 장치로 이동
 # model.conf = 0.3  # 감지 임계값 설정1
-model.conf = 0.6
+model.conf = 0.
 
 # YOLO 처리 스레드
 frame_queue = []
@@ -109,7 +110,7 @@ class MainWindow(QMainWindow):
         self.init()
 
         # 버튼 이벤트 설정
-        self.ui.btn_grab.clicked.connect(lambda: self.target_grab(0, 0, 0))
+        #self.ui.btn_grab.clicked.connect(lambda: self.target_grab(0, 0, 0))
 
         # 테이블 열 너비 설정
         self.ui.table_log.setColumnWidth(0, 150)
@@ -224,8 +225,8 @@ class MainWindow(QMainWindow):
         self.current_frame = frame
 
         # QLabel 크기 (중심 계산용)
-        widget_width = self.ui.label_cam.width()
-        widget_height = self.ui.label_cam.height()
+        widget_width = 640 #self.ui.label_cam.width()
+        widget_height = 480 #self.ui.label_cam.height()
 
         for det in detections:
             x_min, y_min, x_max, y_max, confidence, cls = det
@@ -236,20 +237,37 @@ class MainWindow(QMainWindow):
             x_min, y_min, x_max, y_max = int(x_min), int(y_min), int(x_max), int(y_max)
             class_name = model.names[int(cls)]
             cv2.rectangle(frame, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
-            cv2.putText(frame, f"{class_name} {confidence:.2f}", (x_min, y_min - 10),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+            #cv2.putText(frame, f"{class_name} {confidence:.2f}", (x_min, y_min - 10),
+            #            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
 
             # 거리 계산
             w = x_max - x_min
             distance_cm = (KNOWN_WIDTH * FOCAL_LENGTH) / w
-            cv2.putText(frame, f"{distance_cm:.2f} cm", (x_min, y_min - 30),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 2)
 
-            # 거리 계산
-            w = x_max - x_min
-            distance_cm = (KNOWN_WIDTH * FOCAL_LENGTH) / w
-            cv2.putText(frame, f"{distance_cm:.2f} cm", (x_min, y_min - 30),
-                                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 2)
+            # cv2.putText(frame, f"{distance_cm:.2f} cm", (x_min, y_min - 30),
+            #     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 4)
+
+            # 텍스트내용
+            text = f"{distance_cm:.2f} cm"
+
+            # 텍스트 크기 계산
+            font_scale = 0.6 #default 0.5
+            font_thickness = 2
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            (text_width, text_height), baseline = cv2.getTextSize(text, font, font_scale, font_thickness)
+
+            # 텍스트 배경 위치 계산
+            text_x, text_y = x_min, y_min - 12 #30  # 텍스트 위치
+            background_top_left = (text_x, text_y - text_height - baseline)
+            background_bottom_right = (text_x + text_width, text_y+10)
+
+            # 텍스트 배경 그리기 (검정색 박스)
+            cv2.rectangle(frame, background_top_left, background_bottom_right, (0, 0, 0), -1)
+
+            # 거리 텍스트 그리기 (흰색 글자)
+            cv2.putText(frame, text, (text_x, text_y), font, font_scale, (255, 255, 255), font_thickness)
+
+
 
             # MQTT 송신
             if self.auto_mode_active and time.time() - self.last_sent_time > 0.1:  # 10 FPS 제한
@@ -430,6 +448,16 @@ class MainWindow(QMainWindow):
             self.client.publish("AGV/control", "AUTO_OFF", qos=1)
             print("Manual mode activated.")
 
+    def select_agv1(self):
+        if self.ui.btn_agv1.isChecked():
+            self.ui.btn_agv2.setChecked(False)
+
+
+    def select_agv2(self):
+        if self.ui.btn_agv2.isChecked():
+            self.ui.btn_agv1.setChecked(False)
+
+
     def settingUI(self):
         self.ui.table_log.setRowCount(0)
         for i, commandData in enumerate(self.commandDataList):
@@ -517,7 +545,7 @@ class MainWindow(QMainWindow):
         self.ui.slider_arm_2.setValue(self.ui.slider_arm_2.value() - 1)
 
     def arm_1(self, angle) :
-        mapped_angle = angle#- 130
+        mapped_angle = angle
         command_data = self.makeCommandData("arm_x", mapped_angle, 1)
         self.client.publish(commandTopic, json.dumps(command_data), qos=1)
         self.commandDataList.append(command_data)
@@ -560,12 +588,17 @@ class MainWindow(QMainWindow):
         self.commandDataList.append(command_data)
         self.settingUI()
 
-    def target_grab(self, center_x, center_y, distance_cm):
-        xy_values = f"{center_x},{distance_cm}"
-        command_data = self.makeCommandData("move_arms", center_x,center_y, 1)
+    def target_grab(self):
+        command_data = self.makeCommandData("target_grab", 100, 1)
         self.client.publish(commandTopic, json.dumps(command_data), qos=1)
         self.commandDataList.append(command_data)
         self.settingUI()
+
+
+        #xy_values = f"{center_x},{center_y}"
+        #xy_values = f"{center_x},{center_y}"
+        # command_data = self.makeCommandData("target_grab", center_x,center_y, 1)
+
 
     def closeEvent(self, event):
         self.client.disconnect()
