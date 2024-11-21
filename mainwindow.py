@@ -4,13 +4,17 @@ import torch  # YOLOv5를 위해 필요
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel,QTableWidget, QTableWidgetItem, QWidget, QVBoxLayout, QSizePolicy
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtGui import QImage, QPixmap
-from PySide6.QtCore import QUrl, QTimer, QThread, Signal,QRect
+from PySide6.QtCore import QUrl, QTimer, QThread, Signal,QRect, Qt
 from ui_form import Ui_MainWindow  # Import the generated UI file
 import cv2
 import numpy as np
 import json
 from datetime import datetime
 import pytz
+import platform, pathlib
+from pathlib import Path
+import time
+from queue import Queue
 
 # 한국 시간대 설정
 korea_timezone = pytz.timezone("Asia/Seoul")
@@ -26,17 +30,51 @@ cameraTopic = "AGV/camera"
 autoTopic = "AGV/auto_mode"
 # 거리 계산을 위한 상수
 KNOWN_WIDTH = 3.0  # 객체의 실제 너비 (cm)
-FOCAL_LENGTH = 389.12  # IMX219-160 기반 초점 거리 (픽셀)
-
+# FOCAL_LENGTH = 389.12  # IMX219-160 기반 초점 거리 (픽셀)
+FOCAL_LENGTH = 460.00
 # YOLOv5 모델 로드
+plt = platform.system()
+if plt == 'Windows':
+    pathlib.PosixPath = pathlib.WindowsPath
+else:
+    pathlib.WindowsPath = pathlib.PosixPath
+model = Path("best.pt")
+
+
 model_path = "best.pt"  # 모델 경로를 지정
 model = torch.hub.load('ultralytics/yolov5', 'custom', path=model_path)
 
 # GPU 사용 설정
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')  # GPU or CPU 선택
 model.to(device)  # 모델을 선택한 장치로 이동
-model.conf = 0.3  # 감지 임계값 설정
+# model.conf = 0.3  # 감지 임계값 설정1
+model.conf = 0.6
 
+# YOLO 처리 스레드
+frame_queue = []
+processed_frame_queue = []
+
+class VideoProcessingThread(QThread):
+    frame_processed = Signal(np.ndarray, list)  # 처리된 프레임과 감지 결과 전달
+
+    def __init__(self, model, parent=None):
+        super().__init__(parent)
+        self.model = model
+        self.running = True
+        self.frame_queue = []  # 프레임 큐
+
+    def add_frame(self, frame):
+        if len(self.frame_queue) < 10:  # 큐 크기를 제한하여 메모리 관리
+            self.frame_queue.append(frame)
+
+    def run(self):
+        while self.running:
+            if self.frame_queue:
+                frame = self.frame_queue.pop(0)  # 큐에서 프레임 가져오기
+                frame_resized = cv2.resize(frame, (640, 480))# YOLO 입력 크기 조정
+                results = self.model(frame_resized)  # YOLO 추론
+                detections = results.xyxy[0].cpu().numpy()
+                self.frame_processed.emit(frame, detections)  # 처리된 결과 전달
 
 class MainWindow(QMainWindow):
     servo_angle = 0
@@ -51,15 +89,22 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
+        self.ui.setupUi(self)      
 
-        # layout = QVBoxLayout(self.ui.centralwidget)
-        # layout.addWidget(self.ui.tabWidget)
-        # layout.setContentsMargins(0, 0, 0, 0)
-        # layout.setSpacing(0)
+        # QLabel 업데이트 타이머
+        self.update_timer = QTimer()
+        self.update_timer.timeout.connect(self.update_ui_frame)
+        self.update_timer.start(140)  # 약 15 FPS
 
-        # Ensure tabWidget scales dynamically with QSizePolicy
-        #self.ui.tabWidget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.client = mqtt.Client()
+        self.client.on_message = self.on_message
+        self.client.connect(address, port)
+        self.client.subscribe(cameraTopic)
+        self.client.loop_start()
+
+        self.auto_mode_active = False
+        self.last_sent_time = time.time()
+
 
         self.init()
 
@@ -87,18 +132,6 @@ class MainWindow(QMainWindow):
         self.client.subscribe(cameraTopic, qos=1)
         self.client.loop_start()
 
-        # QWebEngineView 설정
-        # self.web_view = QWebEngineView(self.ui.widget_web)
-        # self.web_view.setGeometry(self.ui.widget_web.geometry())
-        # self.web_view.setUrl(QUrl("https://www.google.com"))
-        # self.web_view.show()
-
-        # 객체 인식을 위한 Cascade 모델 로드
-        #self.target_cascade = cv2.CascadeClassifier("haarcascade_frontalface_alt.xml")
-        #self.target_cascade = cv2.CascadeClassifier("auto.xml")
-
-        self.auto_mode_active = False
-        # 타이머 설정
 
         # --- QWebEngineView 생성 및 초기 설정 ---
         self.web_view = QWebEngineView(self.ui.widget_web)  # Create the QWebEngineView
@@ -112,6 +145,22 @@ class MainWindow(QMainWindow):
 
         # --- 초기 실행 시 widget_web 크기를 기반으로 WebView 설정 ---
         self.update_webview_geometry()  # Ensure initial size matches widget_web
+
+        # VideoProcessingThread 생성
+        self.video_thread = VideoProcessingThread(model)
+        self.video_thread.frame_processed.connect(self.update_frame)
+        self.video_thread.start()
+
+        self.auto_mode_active = False
+        self.last_sent_time = time.time()
+
+        # 타이머 설정: QLabel 업데이트 속도 제한
+        self.update_timer = QTimer()
+        self.update_timer.timeout.connect(self.update_ui_frame)
+        self.update_timer.start(67)  # 약 15 FPS
+
+        self.current_frame = None
+
 
     def resizeEvent(self, event):
         """Update the geometry of the QWebEngineView when widget_web is resized."""
@@ -152,7 +201,85 @@ class MainWindow(QMainWindow):
             self.web_view.setUrl(url)  # Load the URL in the web view
 
 
+    def on_message(self, client, userdata, msg):
+        if msg.topic == sensingTopic:
+            try:
+                data = json.loads(msg.payload.decode("utf-8"))
+                self.sensorData.append(data)
+                self.sensingDataList = self.sensorData[-15:]
+                self.update_sensing_table()
+            except json.JSONDecodeError as e:
+                print("Error decoding JSON:", e)
+        elif msg.topic == cameraTopic:
+            try:
+                jpg_as_np = np.frombuffer(msg.payload, dtype=np.uint8)
+                frame = cv2.imdecode(jpg_as_np, cv2.IMREAD_COLOR)
+                if frame is not None:
+                    self.video_thread.add_frame(frame)  # 프레임을 작업 스레드에 전달
+            except Exception as e:
+                print(f"Error decoding frame: {e}")
 
+    def update_frame(self, frame, detections):
+        """VideoProcessingThread에서 처리된 프레임 업데이트."""
+        self.current_frame = frame
+
+        # QLabel 크기 (중심 계산용)
+        widget_width = self.ui.label_cam.width()
+        widget_height = self.ui.label_cam.height()
+
+        for det in detections:
+            x_min, y_min, x_max, y_max, confidence, cls = det
+            if confidence < 0.5:  # 신뢰도 필터링
+                continue
+
+            # 바운딩 박스 및 클래스 이름 표시
+            x_min, y_min, x_max, y_max = int(x_min), int(y_min), int(x_max), int(y_max)
+            class_name = model.names[int(cls)]
+            cv2.rectangle(frame, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
+            cv2.putText(frame, f"{class_name} {confidence:.2f}", (x_min, y_min - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+
+            # 거리 계산
+            w = x_max - x_min
+            distance_cm = (KNOWN_WIDTH * FOCAL_LENGTH) / w
+            cv2.putText(frame, f"{distance_cm:.2f} cm", (x_min, y_min - 30),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 2)
+
+            # 거리 계산
+            w = x_max - x_min
+            distance_cm = (KNOWN_WIDTH * FOCAL_LENGTH) / w
+            cv2.putText(frame, f"{distance_cm:.2f} cm", (x_min, y_min - 30),
+                                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 2)
+
+            # MQTT 송신
+            if self.auto_mode_active and time.time() - self.last_sent_time > 0.1:  # 10 FPS 제한
+                target_center_x = x_min + w // 2
+                target_center_y = y_min + (y_max - y_min) // 2
+                offset_x = target_center_x - widget_width // 2
+                offset_y = widget_height // 2 - target_center_y
+                movement_data = {"x": offset_x, "y": offset_y}
+                self.client.publish(autoTopic, json.dumps(movement_data))
+                self.last_sent_time = time.time()
+                print(f"Sent offset data: {movement_data}")
+
+    def update_ui_frame(self):
+        """15 FPS로 UI 업데이트."""
+        if self.current_frame is not None:
+            rgb_image = cv2.cvtColor(self.current_frame, cv2.COLOR_BGR2RGB)
+            h, w, ch = rgb_image.shape
+            bytes_per_line = ch * w
+            qt_image = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
+            pixmap = QPixmap.fromImage(qt_image)
+            self.ui.label_cam.setPixmap(pixmap.scaled(self.ui.label_cam.size(), Qt.KeepAspectRatio))
+            self.ui.label_cam.setScaledContents(True)
+
+    # def update_ui_frame(self):
+    #     if processed_frame_queue:
+    #         frame = processed_frame_queue.pop(0)
+    #         rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    #         h, w, ch = rgb_image.shape
+    #         qt_image = QImage(rgb_image.data, w, h, ch * w, QImage.Format_RGB888)
+    #         self.ui.label_cam.setPixmap(QPixmap.fromImage(qt_image))
 
     def init(self):
         print("Initialized")
@@ -171,261 +298,26 @@ class MainWindow(QMainWindow):
             print("Connected to MQTT Broker")
         else:
             print("Failed to connect:", reason_code)
-
-    def on_message(self, client, userdata, msg):
-        if msg.topic == sensingTopic:
-            try:
-                data = json.loads(msg.payload.decode("utf-8"))
-                self.sensorData.append(data)
-                self.sensingDataList = self.sensorData[-15:]
-                self.update_sensing_table()
-            except json.JSONDecodeError as e:
-                print("Error decoding JSON:", e)
-        elif msg.topic == cameraTopic:
-            self.process_label_cam(msg.payload)
     """
-    def process_label_cam(self, payload):
+    def process_results(self, detections, frame):
         try:
-            jpg_as_np = np.frombuffer(payload, dtype=np.uint8)
-            frame = cv2.imdecode(jpg_as_np, cv2.IMREAD_COLOR)
-            if frame is None:
-                print("Failed to decode frame.")
-                return
+            for det in detections:
+                x_min, y_min, x_max, y_max, confidence, cls = det
+                if confidence < 0.5:
+                    continue
+                # 바운딩 박스 그리기
+                cv2.rectangle(frame, (int(x_min), int(y_min)), (int(x_max), int(y_max)), (0, 255, 0), 2)
+                cv2.putText(frame, f"Conf: {confidence:.2f}", (int(x_min), int(y_min) - 10),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
 
-            # 객체 탐지
-            gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            targets = self.target_cascade.detectMultiScale(
-                gray_frame, scaleFactor=1.9, minNeighbors=9, minSize=(20, 20)
-            )
-
-            # QLabel의 중심 좌표 계산
-            widget_width = self.ui.label_cam.width()
-            widget_height = self.ui.label_cam.height()
-
-
-            for (x, y, w, h) in targets:
-                # 사각형 그리기
-                cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
-
-                # 객체 중심 좌표
-                target_center_x = x + w // 2
-                target_center_y = y + h // 2
-
-                screen_center_x = widget_width // 2
-                screen_center_y = widget_height // 2
-
-                # 중심에서의 오프셋 계산
-                offset_x = int(target_center_x - screen_center_x)
-                offset_y = int(target_center_y - screen_center_y)*(-1)
-
-                threshold_x = 1
-                threshold_y = 1
-
-
-                # Horizontal adjustment (left/right rotation) using servo_angle
-                if offset_x < -threshold_x:
-                    self.servo_angle -= 1
-                    if self.servo_angle < -80:  # Lower limit for horizontal servo angle
-                        self.servo_angle = -80
-                elif offset_x > threshold_x:
-                    self.servo_angle += 1
-                    if self.servo_angle > 80:  # Upper limit for horizontal servo angle
-                        self.servo_angle = 80
-
-                if offset_y < -threshold_y:
-                    self.cam_angle +=1
-                    if self.cam_angle > 25 :
-                        self.cam_angle = 25
-                elif offset_y > threshold_y:
-                    self.cam_angle -=1
-                    if self.cam_angle < -40:
-                        self.cam_angle = -40
-
-
-
-
-                # 거리 계산
-                distance_cm = (KNOWN_WIDTH * FOCAL_LENGTH) / w
-                cv2.putText(frame, f"{distance_cm:.2f} cm", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
-
-                # Automode 활성화 상태에서 MQTT로 송신
-                if getattr(self, "auto_mode_active", False):
-                    movement_data = {"x": offset_x, "y": offset_y}
-                    self.client.publish("AGV/auto_mode", json.dumps(movement_data))
-                    print(f"Sent offset data: {movement_data}")
-
-                # 객체 중심점 표시
-                cv2.rectangle(
-                    frame,
-                    (target_center_x - 5, target_center_y - 5),
-                    (target_center_x + 5, target_center_y + 5),
-                    (0, 255, 0),
-                    2,
-                )
-                break  # 첫 번째 객체만 처리
-
-            # OpenCV 이미지 -> QLabel
-            rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            h, w, ch = rgb_image.shape
-            bytes_per_line = ch * w
-            qt_image = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
-            pixmap = QPixmap.fromImage(qt_image)
-            self.ui.label_cam.setPixmap(pixmap.scaled(self.ui.label_cam.size()))
-            self.ui.label_cam.setScaledContents(True)
+            # 처리된 프레임을 큐에 추가
+            processed_frame_queue.append(frame)
 
         except Exception as e:
-            print(f"Error updating label_cam: {e}")
-    """
-
+            print(f"Error in process_results: {e}")
 
     """
-    def process_label_cam(self, payload):
-        try:
-            jpg_as_np = np.frombuffer(payload, dtype=np.uint8)
-            frame = cv2.imdecode(jpg_as_np, cv2.IMREAD_COLOR)
-            if frame is None:
-                print("Failed to decode frame.")
-                return
 
-            # Convert to grayscale and apply edge detection
-            gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            blurred_frame = cv2.GaussianBlur(gray_frame, (5, 5), 0)
-            edges = cv2.Canny(blurred_frame, 30, 150)
-
-            # Find contours
-            contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
-            # QLabel's dimensions for centering calculations
-            widget_width = self.ui.label_cam.width()
-            widget_height = self.ui.label_cam.height()
-
-            # Loop through contours to find rectangles
-            for contour in contours:
-                # Approximate contour to reduce complexity
-                epsilon = 0.02 * cv2.arcLength(contour, True)
-                approx = cv2.approxPolyDP(contour, epsilon, True)
-
-                # Check for rectangular shapes (4 corners)
-                if len(approx) == 4 and cv2.isContourConvex(approx):
-                    # Calculate bounding box and aspect ratio
-                    x, y, w, h = cv2.boundingRect(approx)
-                    aspect_ratio = float(w) / h
-
-                    # Filter by aspect ratio and size (e.g., near-square shapes)
-                    if 0.8 <= aspect_ratio <= 1.2 and w * h > 500:  # Adjust size threshold as needed
-                        cv2.drawContours(frame, [approx], -1, (0, 255, 0), 2)
-
-                        # Calculate shape center
-                        target_center_x = x + w // 2
-                        target_center_y = y + h // 2
-
-                        # Calculate offset from QLabel's center
-                        screen_center_x = widget_width // 2
-                        screen_center_y = widget_height // 2
-
-                        offset_x = target_center_x - screen_center_x
-                        offset_y = target_center_y - screen_center_y
-
-                        # Distance calculation using known object width
-                        distance_cm = (KNOWN_WIDTH * FOCAL_LENGTH) / w
-                        cv2.putText(frame, f"{distance_cm:.2f} cm", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
-
-                        # Send data via MQTT if auto_mode is active
-                        if getattr(self, "auto_mode_active", False):
-                            movement_data = {"x": offset_x, "y": offset_y}
-                            self.client.publish("AGV/auto_mode", json.dumps(movement_data))
-                            print(f"Sent offset data: {movement_data}")
-
-                        # Highlight center point
-                        cv2.circle(frame, (target_center_x, target_center_y), 5, (0, 0, 255), -1)
-                        break  # Process only the first detected shape
-
-            # OpenCV image to QLabel
-            rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            h, w, ch = rgb_image.shape
-            bytes_per_line = ch * w
-            qt_image = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
-            pixmap = QPixmap.fromImage(qt_image)
-            self.ui.label_cam.setPixmap(pixmap.scaled(self.ui.label_cam.size()))
-            self.ui.label_cam.setScaledContents(True)
-
-        except Exception as e:
-            print(f"Error updating label_cam: {e}")
-    """
-    """
-    def process_label_cam(self, payload):
-        try:
-            # MQTT로부터 수신한 이미지 디코딩
-            jpg_as_np = np.frombuffer(payload, dtype=np.uint8)
-            frame = cv2.imdecode(jpg_as_np, cv2.IMREAD_COLOR)
-            if frame is None:
-                print("Failed to decode frame.")
-                return
-
-            # 이미지 전처리
-            frame_resized = cv2.resize(frame, (640, 480))  # 해상도 조정
-            gray = cv2.cvtColor(frame_resized, cv2.COLOR_BGR2GRAY)  # 흑백 변환
-            blurred = cv2.GaussianBlur(gray, (5, 5), 0)  # 노이즈 제거
-            edges = cv2.Canny(blurred, 30, 120)  # 에지 검출
-
-            # 윤곽선 찾기
-            contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-            # QLabel 크기 (중심 계산용)
-            widget_width = self.ui.label_cam.width()
-            widget_height = self.ui.label_cam.height()
-
-            for contour in contours:
-                # 윤곽선 근사화
-                approx = cv2.approxPolyDP(contour, 0.02 * cv2.arcLength(contour, True), True)
-
-                # 사각형 조건: 꼭짓점 4개 & 볼록성 체크
-                if len(approx) == 4 and cv2.isContourConvex(approx):
-                    # 바운딩 박스 계산
-                    x, y, w, h = cv2.boundingRect(approx)
-
-                    # 가로:세로 비율 확인 (정사각형 또는 직사각형)
-                    aspect_ratio = float(w) / h
-                    if 0.8 <= aspect_ratio <= 1.2 and w * h > 300:  # 크기 조건
-                        #cv2.drawContours(frame_resized, [approx], -1, (0, 255, 0), 2)  # 초록색 윤곽선
-
-                        # 객체 중심 계산
-                        target_center_x = x + w // 2
-                        target_center_y = y + h // 2
-
-                        # QLabel 중심과의 오프셋 계산
-                        screen_center_x = widget_width // 2
-                        screen_center_y = widget_height // 2
-
-                        offset_x = target_center_x - screen_center_x
-                        offset_y = target_center_y - screen_center_y
-
-                        # 거리 계산 (가로 길이를 기준으로)
-                        distance_cm = (KNOWN_WIDTH * FOCAL_LENGTH) / w
-                        #cv2.putText(frame_resized, f"{distance_cm:.2f} cm", (x, y - 10),
-                         #           cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
-
-                        # Auto Mode 활성화 상태에서 MQTT로 데이터 송신
-                        if getattr(self, "auto_mode_active", False):
-                            movement_data = {"x": offset_x, "y": offset_y}
-                            self.client.publish("AGV/auto_mode", json.dumps(movement_data))
-                            print(f"Sent offset data: {movement_data}")
-
-                        # 객체 중심점 표시
-                        #cv2.circle(frame_resized, (target_center_x, target_center_y), 5, (0, 0, 255), -1)
-                        break  # 첫 번째 객체만 처리
-
-            # OpenCV 이미지 → QLabel 업데이트
-            rgb_image = cv2.cvtColor(frame_resized, cv2.COLOR_BGR2RGB)
-            h, w, ch = rgb_image.shape
-            bytes_per_line = ch * w
-            qt_image = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
-            pixmap = QPixmap.fromImage(qt_image)
-            self.ui.label_cam.setPixmap(pixmap.scaled(self.ui.label_cam.size()))
-            self.ui.label_cam.setScaledContents(True)
-
-        except Exception as e:
-            print(f"Error updating label_cam: {e}")
     """
     def process_label_cam(self, payload):
             try:
@@ -437,6 +329,7 @@ class MainWindow(QMainWindow):
                     return
 
                 # YOLOv5로 객체 감지
+
                 results = model(frame)
                 detections = results.xyxy[0].numpy()  # 결과를 numpy 배열로 변환
 
@@ -490,6 +383,7 @@ class MainWindow(QMainWindow):
 
             except Exception as e:
                 print(f"Error updating label_cam: {e}")
+    """
 
     def set_reset(self):
         command_data = self.makeCommandData("reset", 0, 1)
@@ -675,6 +569,8 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event):
         self.client.disconnect()
+        self.video_thread.running = False
+        self.video_thread.wait()
         event.accept()
 
 if __name__ == "__main__":
