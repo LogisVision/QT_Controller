@@ -74,6 +74,7 @@ class Ui_MainWindow(object):
         sizePolicy2.setHeightForWidth(self.btn_manual.sizePolicy().hasHeightForWidth())
         self.btn_manual.setSizePolicy(sizePolicy2)
         self.btn_manual.setCheckable(True)
+        self.btn_manual.setChecked(True)
 
         self.verticalLayout.addWidget(self.btn_manual)
 
@@ -452,6 +453,7 @@ class Ui_MainWindow(object):
         self.btn_agv1.setIcon(icon)
         self.btn_agv1.setIconSize(QSize(50, 50))
         self.btn_agv1.setCheckable(True)
+        self.btn_agv1.setChecked(True)
 
         self.horizontalLayout_7.addWidget(self.btn_agv1)
 
