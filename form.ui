@@ -93,7 +93,7 @@
             <item>
              <widget class="QLabel" name="label_cam">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -1016,7 +1016,7 @@ QSlider::handle:vertical {
      <x>0</x>
      <y>0</y>
      <width>1436</width>
-     <height>22</height>
+     <height>38</height>
     </rect>
    </property>
   </widget>
