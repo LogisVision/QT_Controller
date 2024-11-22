@@ -26,6 +26,12 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="1">
      <widget class="QTabWidget" name="tabWidget">
+      <property name="styleSheet">
+       <string notr="true">QTabBar::tab {
+    height: 100px; 
+    width: 50px; 
+}</string>
+      </property>
       <property name="tabPosition">
        <enum>QTabWidget::TabPosition::West</enum>
       </property>
@@ -86,7 +92,7 @@
                 <item>
                  <widget class="QPushButton" name="btn_manual">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+                   <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -208,18 +214,22 @@
              </layout>
             </item>
             <item>
-             <layout class="QGridLayout" name="gridLayout_5" rowminimumheight="0,0">
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_arm_left">
+             <layout class="QGridLayout" name="gridLayout_5">
+              <item row="1" column="2">
+               <widget class="QPushButton" name="btn_grab_plus">
                 <property name="text">
-                 <string>LEFT</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                 <string>+</string>
                 </property>
                </widget>
               </item>
-              <item row="1" column="1">
+              <item row="3" column="0">
+               <widget class="QPushButton" name="btn_turn_left">
+                <property name="text">
+                 <string>LEFT</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
                <widget class="QSlider" name="slider_arm">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -260,6 +270,23 @@ QSlider::handle:vertical {
                </widget>
               </item>
               <item row="0" column="1">
+               <widget class="QLabel" name="label_grab">
+                <property name="text">
+                 <string>GRAB</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="2">
+               <widget class="QPushButton" name="btn_turn_right">
+                <property name="text">
+                 <string>RIGHT</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
                <widget class="QSlider" name="slider_grab">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -288,6 +315,12 @@ QSlider::handle:vertical {
                 <property name="maximum">
                  <number>90</number>
                 </property>
+                <property name="singleStep">
+                 <number>2</number>
+                </property>
+                <property name="pageStep">
+                 <number>0</number>
+                </property>
                 <property name="sliderPosition">
                  <number>0</number>
                 </property>
@@ -302,23 +335,10 @@ QSlider::handle:vertical {
                 </property>
                </widget>
               </item>
-              <item row="1" column="2">
-               <widget class="QLabel" name="label_arm_right">
+              <item row="1" column="0">
+               <widget class="QPushButton" name="btn_grab_minus">
                 <property name="text">
-                 <string>RIGHT</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignmentFlag::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="2">
-               <widget class="QLabel" name="label_grab">
-                <property name="text">
-                 <string>GRAB</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                 <string>-</string>
                 </property>
                </widget>
               </item>
@@ -926,6 +946,14 @@ QSlider::handle:vertical {
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
            <widget class="QTableWidget" name="table_log">
+            <property name="font">
+             <font>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="sortingEnabled">
+             <bool>true</bool>
+            </property>
             <property name="columnCount">
              <number>4</number>
             </property>
@@ -1018,7 +1046,7 @@ QSlider::handle:vertical {
      <x>0</x>
      <y>0</y>
      <width>1246</width>
-     <height>22</height>
+     <height>38</height>
     </rect>
    </property>
   </widget>
@@ -1033,8 +1061,8 @@ QSlider::handle:vertical {
    <slot>left()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>154</x>
-     <y>577</y>
+     <x>165</x>
+     <y>567</y>
     </hint>
     <hint type="destinationlabel">
      <x>117</x>
@@ -1049,8 +1077,8 @@ QSlider::handle:vertical {
    <slot>right()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>315</x>
-     <y>577</y>
+     <x>386</x>
+     <y>567</y>
     </hint>
     <hint type="destinationlabel">
      <x>462</x>
@@ -1081,8 +1109,8 @@ QSlider::handle:vertical {
    <slot>mid()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>235</x>
-     <y>577</y>
+     <x>275</x>
+     <y>567</y>
     </hint>
     <hint type="destinationlabel">
      <x>361</x>
@@ -1129,12 +1157,12 @@ QSlider::handle:vertical {
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1044</x>
-     <y>307</y>
+     <x>1021</x>
+     <y>430</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1040</x>
-     <y>110</y>
+     <x>1018</x>
+     <y>124</y>
     </hint>
    </hints>
   </connection>
@@ -1145,12 +1173,12 @@ QSlider::handle:vertical {
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1128</x>
-     <y>298</y>
+     <x>1080</x>
+     <y>421</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1128</x>
-     <y>110</y>
+     <x>1077</x>
+     <y>124</y>
     </hint>
    </hints>
   </connection>
@@ -1177,8 +1205,8 @@ QSlider::handle:vertical {
    <slot>grab()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>478</x>
-     <y>515</y>
+     <x>525</x>
+     <y>545</y>
     </hint>
     <hint type="destinationlabel">
      <x>470</x>
@@ -1209,8 +1237,8 @@ QSlider::handle:vertical {
    <slot>arm_1()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1044</x>
-     <y>240</y>
+     <x>1021</x>
+     <y>363</y>
     </hint>
     <hint type="destinationlabel">
      <x>897</x>
@@ -1225,8 +1253,8 @@ QSlider::handle:vertical {
    <slot>arm_2()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1128</x>
-     <y>244</y>
+     <x>1080</x>
+     <y>367</y>
     </hint>
     <hint type="destinationlabel">
      <x>979</x>
@@ -1241,8 +1269,8 @@ QSlider::handle:vertical {
    <slot>slide_x_minus()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1030</x>
-     <y>561</y>
+     <x>1018</x>
+     <y>567</y>
     </hint>
     <hint type="destinationlabel">
      <x>895</x>
@@ -1257,8 +1285,8 @@ QSlider::handle:vertical {
    <slot>slide_x_plus()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1034</x>
-     <y>88</y>
+     <x>1018</x>
+     <y>106</y>
     </hint>
     <hint type="destinationlabel">
      <x>793</x>
@@ -1273,8 +1301,8 @@ QSlider::handle:vertical {
    <slot>slide_y_plus()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1117</x>
-     <y>88</y>
+     <x>1077</x>
+     <y>106</y>
     </hint>
     <hint type="destinationlabel">
      <x>983</x>
@@ -1289,8 +1317,8 @@ QSlider::handle:vertical {
    <slot>slide_y_minus()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1109</x>
-     <y>561</y>
+     <x>1077</x>
+     <y>567</y>
     </hint>
     <hint type="destinationlabel">
      <x>963</x>
@@ -1305,8 +1333,8 @@ QSlider::handle:vertical {
    <slot>set_reset()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1210</x>
-     <y>372</y>
+     <x>1207</x>
+     <y>567</y>
     </hint>
     <hint type="destinationlabel">
      <x>139</x>
@@ -1321,8 +1349,8 @@ QSlider::handle:vertical {
    <slot>mode_auto()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>155</x>
-     <y>110</y>
+     <x>135</x>
+     <y>166</y>
     </hint>
     <hint type="destinationlabel">
      <x>866</x>
@@ -1337,8 +1365,8 @@ QSlider::handle:vertical {
    <slot>mode_manual()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>155</x>
-     <y>330</y>
+     <x>154</x>
+     <y>472</y>
     </hint>
     <hint type="destinationlabel">
      <x>715</x>
@@ -1369,8 +1397,8 @@ QSlider::handle:vertical {
    <slot>web_prev()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>96</x>
-     <y>58</y>
+     <x>142</x>
+     <y>98</y>
     </hint>
     <hint type="destinationlabel">
      <x>120</x>
@@ -1385,8 +1413,8 @@ QSlider::handle:vertical {
    <slot>web_refresh()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>327</x>
-     <y>69</y>
+     <x>322</x>
+     <y>98</y>
     </hint>
     <hint type="destinationlabel">
      <x>262</x>
@@ -1401,8 +1429,8 @@ QSlider::handle:vertical {
    <slot>web_go()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1194</x>
-     <y>46</y>
+     <x>1210</x>
+     <y>98</y>
     </hint>
     <hint type="destinationlabel">
      <x>1245</x>
@@ -1417,8 +1445,8 @@ QSlider::handle:vertical {
    <slot>web_next()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>242</x>
-     <y>69</y>
+     <x>233</x>
+     <y>98</y>
     </hint>
     <hint type="destinationlabel">
      <x>76</x>
@@ -1474,6 +1502,102 @@ QSlider::handle:vertical {
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btn_cam_up</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slide_cam_plus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>916</x>
+     <y>96</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>527</x>
+     <y>47</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_grab_minus</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slide_grab_minus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>447</x>
+     <y>534</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>372</x>
+     <y>644</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_grab_plus</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slide_grab_plus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>824</x>
+     <y>538</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>636</x>
+     <y>643</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_turn_right</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slide_turn_plus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>841</x>
+     <y>590</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>693</x>
+     <y>620</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_cam_down</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slide_cam_minus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>907</x>
+     <y>552</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>844</x>
+     <y>644</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_turn_left</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slide_turn_minus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>459</x>
+     <y>581</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>469</x>
+     <y>642</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>go()</slot>
@@ -1504,5 +1628,11 @@ QSlider::handle:vertical {
   <slot>web_go()</slot>
   <slot>select_agv1()</slot>
   <slot>select_agv2()</slot>
+  <slot>slide_cam_minus()</slot>
+  <slot>slide_cam_plus()</slot>
+  <slot>slide_grab_minus()</slot>
+  <slot>slide_grab_plus()</slot>
+  <slot>slide_turn_minus()</slot>
+  <slot>slide_turn_plus()</slot>
  </slots>
 </ui>

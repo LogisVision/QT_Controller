@@ -38,6 +38,10 @@ class Ui_MainWindow(object):
         self.gridLayout.setObjectName(u"gridLayout")
         self.tabWidget = QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName(u"tabWidget")
+        self.tabWidget.setStyleSheet(u"QTabBar::tab {\n"
+"    height: 100px; \n"
+"    width: 50px; \n"
+"}")
         self.tabWidget.setTabPosition(QTabWidget.TabPosition.West)
         self.tabWidget.setIconSize(QSize(50, 50))
         self.tab_1 = QWidget()
@@ -68,11 +72,8 @@ class Ui_MainWindow(object):
 
         self.btn_manual = QPushButton(self.tab_1)
         self.btn_manual.setObjectName(u"btn_manual")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.btn_manual.sizePolicy().hasHeightForWidth())
-        self.btn_manual.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.btn_manual.sizePolicy().hasHeightForWidth())
+        self.btn_manual.setSizePolicy(sizePolicy1)
         self.btn_manual.setCheckable(True)
         self.btn_manual.setChecked(True)
 
@@ -83,11 +84,11 @@ class Ui_MainWindow(object):
 
         self.label_cam = QLabel(self.tab_1)
         self.label_cam.setObjectName(u"label_cam")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Ignored)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.label_cam.sizePolicy().hasHeightForWidth())
-        self.label_cam.setSizePolicy(sizePolicy3)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Ignored)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.label_cam.sizePolicy().hasHeightForWidth())
+        self.label_cam.setSizePolicy(sizePolicy2)
         self.label_cam.setStyleSheet(u"background-color : gray;")
 
         self.horizontalLayout_4.addWidget(self.label_cam)
@@ -96,8 +97,11 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.btn_grab = QPushButton(self.tab_1)
         self.btn_grab.setObjectName(u"btn_grab")
-        sizePolicy2.setHeightForWidth(self.btn_grab.sizePolicy().hasHeightForWidth())
-        self.btn_grab.setSizePolicy(sizePolicy2)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.btn_grab.sizePolicy().hasHeightForWidth())
+        self.btn_grab.setSizePolicy(sizePolicy3)
 
         self.verticalLayout_2.addWidget(self.btn_grab)
 
@@ -154,11 +158,15 @@ class Ui_MainWindow(object):
 
         self.gridLayout_5 = QGridLayout()
         self.gridLayout_5.setObjectName(u"gridLayout_5")
-        self.label_arm_left = QLabel(self.tab_1)
-        self.label_arm_left.setObjectName(u"label_arm_left")
-        self.label_arm_left.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.btn_grab_plus = QPushButton(self.tab_1)
+        self.btn_grab_plus.setObjectName(u"btn_grab_plus")
 
-        self.gridLayout_5.addWidget(self.label_arm_left, 1, 0, 1, 1)
+        self.gridLayout_5.addWidget(self.btn_grab_plus, 1, 2, 1, 1)
+
+        self.btn_turn_left = QPushButton(self.tab_1)
+        self.btn_turn_left.setObjectName(u"btn_turn_left")
+
+        self.gridLayout_5.addWidget(self.btn_turn_left, 3, 0, 1, 1)
 
         self.slider_arm = QSlider(self.tab_1)
         self.slider_arm.setObjectName(u"slider_arm")
@@ -183,7 +191,18 @@ class Ui_MainWindow(object):
         self.slider_arm.setOrientation(Qt.Orientation.Horizontal)
         self.slider_arm.setTickPosition(QSlider.TickPosition.TicksAbove)
 
-        self.gridLayout_5.addWidget(self.slider_arm, 1, 1, 1, 1)
+        self.gridLayout_5.addWidget(self.slider_arm, 3, 1, 1, 1)
+
+        self.label_grab = QLabel(self.tab_1)
+        self.label_grab.setObjectName(u"label_grab")
+        self.label_grab.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout_5.addWidget(self.label_grab, 0, 1, 1, 1)
+
+        self.btn_turn_right = QPushButton(self.tab_1)
+        self.btn_turn_right.setObjectName(u"btn_turn_right")
+
+        self.gridLayout_5.addWidget(self.btn_turn_right, 3, 2, 1, 1)
 
         self.slider_grab = QSlider(self.tab_1)
         self.slider_grab.setObjectName(u"slider_grab")
@@ -204,24 +223,19 @@ class Ui_MainWindow(object):
 "}")
         self.slider_grab.setMinimum(-90)
         self.slider_grab.setMaximum(90)
+        self.slider_grab.setSingleStep(2)
+        self.slider_grab.setPageStep(0)
         self.slider_grab.setSliderPosition(0)
         self.slider_grab.setOrientation(Qt.Orientation.Horizontal)
         self.slider_grab.setTickPosition(QSlider.TickPosition.TicksAbove)
         self.slider_grab.setTickInterval(20)
 
-        self.gridLayout_5.addWidget(self.slider_grab, 0, 1, 1, 1)
+        self.gridLayout_5.addWidget(self.slider_grab, 1, 1, 1, 1)
 
-        self.label_arm_right = QLabel(self.tab_1)
-        self.label_arm_right.setObjectName(u"label_arm_right")
-        self.label_arm_right.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.btn_grab_minus = QPushButton(self.tab_1)
+        self.btn_grab_minus.setObjectName(u"btn_grab_minus")
 
-        self.gridLayout_5.addWidget(self.label_arm_right, 1, 2, 1, 1)
-
-        self.label_grab = QLabel(self.tab_1)
-        self.label_grab.setObjectName(u"label_grab")
-        self.label_grab.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout_5.addWidget(self.label_grab, 0, 2, 1, 1)
+        self.gridLayout_5.addWidget(self.btn_grab_minus, 1, 0, 1, 1)
 
 
         self.horizontalLayout_6.addLayout(self.gridLayout_5)
@@ -585,6 +599,8 @@ class Ui_MainWindow(object):
         __qtablewidgetitem3 = QTableWidgetItem()
         self.table_log.setHorizontalHeaderItem(3, __qtablewidgetitem3)
         self.table_log.setObjectName(u"table_log")
+        self.table_log.setFont(font2)
+        self.table_log.setSortingEnabled(True)
         self.table_log.setColumnCount(4)
         self.table_log.horizontalHeader().setVisible(True)
         self.table_log.horizontalHeader().setHighlightSections(True)
@@ -628,7 +644,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1246, 22))
+        self.menubar.setGeometry(QRect(0, 0, 1246, 38))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -663,6 +679,12 @@ class Ui_MainWindow(object):
         self.btn_agv1.toggled.connect(MainWindow.select_agv1)
         self.btn_agv2.toggled.connect(MainWindow.select_agv2)
         self.btn_grab.clicked.connect(MainWindow.target_grab)
+        self.btn_cam_up.clicked.connect(MainWindow.slide_cam_plus)
+        self.btn_grab_minus.clicked.connect(MainWindow.slide_grab_minus)
+        self.btn_grab_plus.clicked.connect(MainWindow.slide_grab_plus)
+        self.btn_turn_right.clicked.connect(MainWindow.slide_turn_plus)
+        self.btn_cam_down.clicked.connect(MainWindow.slide_cam_minus)
+        self.btn_turn_left.clicked.connect(MainWindow.slide_turn_minus)
 
         self.tabWidget.setCurrentIndex(0)
 
@@ -681,9 +703,11 @@ class Ui_MainWindow(object):
         self.btn_go.setText(QCoreApplication.translate("MainWindow", u"Go", None))
         self.btn_back.setText(QCoreApplication.translate("MainWindow", u"Back", None))
         self.btn_left.setText(QCoreApplication.translate("MainWindow", u"Left", None))
-        self.label_arm_left.setText(QCoreApplication.translate("MainWindow", u"LEFT", None))
-        self.label_arm_right.setText(QCoreApplication.translate("MainWindow", u"RIGHT", None))
+        self.btn_grab_plus.setText(QCoreApplication.translate("MainWindow", u"+", None))
+        self.btn_turn_left.setText(QCoreApplication.translate("MainWindow", u"LEFT", None))
         self.label_grab.setText(QCoreApplication.translate("MainWindow", u"GRAB", None))
+        self.btn_turn_right.setText(QCoreApplication.translate("MainWindow", u"RIGHT", None))
+        self.btn_grab_minus.setText(QCoreApplication.translate("MainWindow", u"-", None))
         self.btn_cam_up.setText(QCoreApplication.translate("MainWindow", u"\u25b2", None))
         self.label_cam_angle.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.label_angle.setText(QCoreApplication.translate("MainWindow", u"CAM Angle", None))
