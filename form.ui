@@ -24,19 +24,13 @@
     </sizepolicy>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="1">
+    <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
-      <property name="styleSheet">
-       <string notr="true">QTabBar::tab {
-    height: 100px; 
-    width: 50px; 
-}</string>
-      </property>
       <property name="tabPosition">
        <enum>QTabWidget::TabPosition::West</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <property name="iconSize">
        <size>
@@ -53,301 +47,6 @@
         <string/>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_6" columnstretch="7,1">
-        <item row="0" column="0">
-         <layout class="QVBoxLayout" name="verticalLayout_9" stretch="1,0">
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0">
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,7,1">
-              <property name="sizeConstraint">
-               <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
-              </property>
-              <item>
-               <layout class="QVBoxLayout" name="verticalLayout">
-                <property name="leftMargin">
-                 <number>0</number>
-                </property>
-                <property name="rightMargin">
-                 <number>5</number>
-                </property>
-                <item>
-                 <widget class="QPushButton" name="btn_auto">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="text">
-                   <string>AUTO</string>
-                  </property>
-                  <property name="checkable">
-                   <bool>true</bool>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="btn_manual">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="text">
-                   <string>MANUAL</string>
-                  </property>
-                  <property name="checkable">
-                   <bool>true</bool>
-                  </property>
-                  <property name="checked">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-              <item>
-               <widget class="QLabel" name="label_cam">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">background-color : gray;</string>
-                </property>
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <layout class="QVBoxLayout" name="verticalLayout_2">
-                <item>
-                 <widget class="QPushButton" name="btn_grab">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="text">
-                   <string>GRAB</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="2,3">
-            <item>
-             <layout class="QGridLayout" name="gridLayout_4">
-              <item row="1" column="2">
-               <widget class="QPushButton" name="btn_right">
-                <property name="font">
-                 <font>
-                  <pointsize>20</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Right</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QPushButton" name="btn_mid">
-                <property name="font">
-                 <font>
-                  <pointsize>20</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Mid</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QPushButton" name="btn_go">
-                <property name="font">
-                 <font>
-                  <pointsize>20</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Go</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QPushButton" name="btn_back">
-                <property name="font">
-                 <font>
-                  <pointsize>20</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Back</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QPushButton" name="btn_left">
-                <property name="font">
-                 <font>
-                  <pointsize>20</pointsize>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Left</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QGridLayout" name="gridLayout_5">
-              <item row="1" column="2">
-               <widget class="QPushButton" name="btn_grab_plus">
-                <property name="text">
-                 <string>+</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0">
-               <widget class="QPushButton" name="btn_turn_left">
-                <property name="text">
-                 <string>LEFT</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="1">
-               <widget class="QSlider" name="slider_arm">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QSlider::handle:horizontal {
-    width: 15px; /* 원하는 가로 크기 */
-    height: 15px; /* 원하는 세로 크기 */
-    background-color: black; /* 핸들 색상 */
-    border-radius: 7px; /* 둥근 모서리 */
-}
-
-QSlider::handle:vertical {
-    width: 15px; /* 원하는 가로 크기 */
-    height: 15px; /* 원하는 세로 크기 */
-    background-color: #3498db; /* 핸들 색상 */
-    border-radius: 7px; /* 둥근 모서리 */
-}</string>
-                </property>
-                <property name="minimum">
-                 <number>-80</number>
-                </property>
-                <property name="maximum">
-                 <number>80</number>
-                </property>
-                <property name="sliderPosition">
-                 <number>0</number>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Orientation::Horizontal</enum>
-                </property>
-                <property name="tickPosition">
-                 <enum>QSlider::TickPosition::TicksAbove</enum>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QLabel" name="label_grab">
-                <property name="text">
-                 <string>GRAB</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignmentFlag::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="2">
-               <widget class="QPushButton" name="btn_turn_right">
-                <property name="text">
-                 <string>RIGHT</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QSlider" name="slider_grab">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QSlider::handle:horizontal {
-    width: 15px; /* 원하는 가로 크기 */
-    height: 15px; /* 원하는 세로 크기 */
-    background-color: black; /* 핸들 색상 */
-    border-radius: 7px; /* 둥근 모서리 */
-}
-
-QSlider::handle:vertical {
-    width: 15px; /* 원하는 가로 크기 */
-    height: 15px; /* 원하는 세로 크기 */
-    background-color: #3498db; /* 핸들 색상 */
-    border-radius: 7px; /* 둥근 모서리 */
-}</string>
-                </property>
-                <property name="minimum">
-                 <number>-90</number>
-                </property>
-                <property name="maximum">
-                 <number>90</number>
-                </property>
-                <property name="singleStep">
-                 <number>2</number>
-                </property>
-                <property name="pageStep">
-                 <number>0</number>
-                </property>
-                <property name="sliderPosition">
-                 <number>0</number>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Orientation::Horizontal</enum>
-                </property>
-                <property name="tickPosition">
-                 <enum>QSlider::TickPosition::TicksAbove</enum>
-                </property>
-                <property name="tickInterval">
-                 <number>20</number>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QPushButton" name="btn_grab_minus">
-                <property name="text">
-                 <string>-</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </item>
         <item row="0" column="1">
          <layout class="QVBoxLayout" name="verticalLayout_8" stretch="4,0">
           <item>
@@ -792,6 +491,347 @@ QSlider::handle:vertical {
           </item>
          </layout>
         </item>
+        <item row="0" column="0">
+         <layout class="QVBoxLayout" name="verticalLayout_9" stretch="1,0">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_3" stretch="0,0">
+            <item>
+             <widget class="QLabel" name="label_13">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap>icons/Basic Theme.png</pixmap>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="1,7,1">
+              <property name="sizeConstraint">
+               <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+              </property>
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>5</number>
+                </property>
+                <item>
+                 <widget class="QPushButton" name="btn_auto">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="text">
+                   <string>AUTO</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="btn_manual">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="text">
+                   <string>MANUAL</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_cam">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color : gray;</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_2">
+                <item>
+                 <widget class="QPushButton" name="btn_grab">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="text">
+                   <string>GRAB</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="2,3">
+            <item>
+             <layout class="QGridLayout" name="gridLayout_4">
+              <item row="1" column="2">
+               <widget class="QPushButton" name="btn_right">
+                <property name="font">
+                 <font>
+                  <pointsize>20</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Right</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QPushButton" name="btn_mid">
+                <property name="font">
+                 <font>
+                  <pointsize>20</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Mid</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QPushButton" name="btn_go">
+                <property name="font">
+                 <font>
+                  <pointsize>20</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Go</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QPushButton" name="btn_back">
+                <property name="font">
+                 <font>
+                  <pointsize>20</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Back</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QPushButton" name="btn_left">
+                <property name="font">
+                 <font>
+                  <pointsize>20</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Left</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QGridLayout" name="gridLayout_5">
+              <item row="1" column="0">
+               <widget class="QSlider" name="slider_grab">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QSlider::handle:horizontal {
+    width: 15px; /* 원하는 가로 크기 */
+    height: 15px; /* 원하는 세로 크기 */
+    background-color: black; /* 핸들 색상 */
+    border-radius: 7px; /* 둥근 모서리 */
+}
+
+QSlider::handle:vertical {
+    width: 15px; /* 원하는 가로 크기 */
+    height: 15px; /* 원하는 세로 크기 */
+    background-color: #3498db; /* 핸들 색상 */
+    border-radius: 7px; /* 둥근 모서리 */
+}</string>
+                </property>
+                <property name="minimum">
+                 <number>-90</number>
+                </property>
+                <property name="maximum">
+                 <number>90</number>
+                </property>
+                <property name="sliderPosition">
+                 <number>0</number>
+                </property>
+                <property name="orientation">
+                 <enum>Qt::Orientation::Horizontal</enum>
+                </property>
+                <property name="tickPosition">
+                 <enum>QSlider::TickPosition::TicksAbove</enum>
+                </property>
+                <property name="tickInterval">
+                 <number>20</number>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <layout class="QHBoxLayout" name="horizontalLayout_17" stretch="0,6,0">
+                <item>
+                 <layout class="QVBoxLayout" name="verticalLayout_14">
+                  <item>
+                   <widget class="QLabel" name="label_arm_left_2">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="text">
+                     <string>LEFT</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignmentFlag::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="btn_turn_left">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="text">
+                     <string>◀</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <widget class="QSlider" name="slider_arm">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="styleSheet">
+                   <string notr="true">QSlider::handle:horizontal {
+    width: 15px; /* 원하는 가로 크기 */
+    height: 15px; /* 원하는 세로 크기 */
+    background-color: black; /* 핸들 색상 */
+    border-radius: 7px; /* 둥근 모서리 */
+}
+
+QSlider::handle:vertical {
+    width: 15px; /* 원하는 가로 크기 */
+    height: 15px; /* 원하는 세로 크기 */
+    background-color: #3498db; /* 핸들 색상 */
+    border-radius: 7px; /* 둥근 모서리 */
+}</string>
+                  </property>
+                  <property name="minimum">
+                   <number>-80</number>
+                  </property>
+                  <property name="maximum">
+                   <number>80</number>
+                  </property>
+                  <property name="sliderPosition">
+                   <number>0</number>
+                  </property>
+                  <property name="orientation">
+                   <enum>Qt::Orientation::Horizontal</enum>
+                  </property>
+                  <property name="tickPosition">
+                   <enum>QSlider::TickPosition::TicksAbove</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <layout class="QVBoxLayout" name="verticalLayout_15">
+                  <item>
+                   <widget class="QLabel" name="label_arm_left_3">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="text">
+                     <string>RIGHT</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignmentFlag::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="btn_arm_right">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="text">
+                     <string>▶</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_grab">
+                <property name="text">
+                 <string>GRAB</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignmentFlag::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="tab_2">
@@ -946,19 +986,14 @@ QSlider::handle:vertical {
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
            <widget class="QTableWidget" name="table_log">
-            <property name="font">
-             <font>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="sortingEnabled">
-             <bool>true</bool>
-            </property>
             <property name="columnCount">
              <number>4</number>
             </property>
             <attribute name="horizontalHeaderVisible">
              <bool>true</bool>
+            </attribute>
+            <attribute name="horizontalHeaderMinimumSectionSize">
+             <number>34</number>
             </attribute>
             <attribute name="horizontalHeaderHighlightSections">
              <bool>true</bool>
@@ -1035,6 +1070,263 @@ QSlider::handle:vertical {
        <attribute name="title">
         <string/>
        </attribute>
+       <layout class="QGridLayout" name="gridLayout_7">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_14">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap>icons/Basic Theme.png</pixmap>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" colspan="2">
+         <layout class="QVBoxLayout" name="verticalLayout_13">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_12">
+            <item>
+             <widget class="QLabel" name="label_8">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>20</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>FORWARD SPEED</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="spinbox_forward">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>28</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+              <property name="value">
+               <double>2.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_13">
+            <item>
+             <widget class="QLabel" name="label_9">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>20</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>BACKWARD SPEED</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="spinbox_backward">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>28</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+              <property name="value">
+               <double>2.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_14">
+            <item>
+             <widget class="QLabel" name="label_10">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>20</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>TURN SPEED</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="spinbox_turn">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>28</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+              <property name="value">
+               <double>5.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_15">
+            <item>
+             <widget class="QLabel" name="label_11">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>20</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>ARM ROTATE SPEED</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="spinbox_rotate">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>28</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+              <property name="value">
+               <double>5.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_16" stretch="0,0,0">
+            <item>
+             <widget class="QPushButton" name="btn_set_reset">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>RESET</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_12">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btn_set_save">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>SAVE</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_setting_agv">
+          <property name="font">
+           <font>
+            <pointsize>36</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>AGV1</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -1046,7 +1338,7 @@ QSlider::handle:vertical {
      <x>0</x>
      <y>0</y>
      <width>1246</width>
-     <height>38</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
@@ -1061,8 +1353,8 @@ QSlider::handle:vertical {
    <slot>left()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>165</x>
-     <y>567</y>
+     <x>154</x>
+     <y>577</y>
     </hint>
     <hint type="destinationlabel">
      <x>117</x>
@@ -1077,8 +1369,8 @@ QSlider::handle:vertical {
    <slot>right()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>386</x>
-     <y>567</y>
+     <x>315</x>
+     <y>577</y>
     </hint>
     <hint type="destinationlabel">
      <x>462</x>
@@ -1109,8 +1401,8 @@ QSlider::handle:vertical {
    <slot>mid()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>275</x>
-     <y>567</y>
+     <x>235</x>
+     <y>577</y>
     </hint>
     <hint type="destinationlabel">
      <x>361</x>
@@ -1157,12 +1449,12 @@ QSlider::handle:vertical {
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1021</x>
-     <y>430</y>
+     <x>1044</x>
+     <y>307</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1018</x>
-     <y>124</y>
+     <x>1040</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -1173,12 +1465,12 @@ QSlider::handle:vertical {
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1080</x>
-     <y>421</y>
+     <x>1128</x>
+     <y>298</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1077</x>
-     <y>124</y>
+     <x>1128</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -1205,8 +1497,8 @@ QSlider::handle:vertical {
    <slot>grab()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>525</x>
-     <y>545</y>
+     <x>478</x>
+     <y>515</y>
     </hint>
     <hint type="destinationlabel">
      <x>470</x>
@@ -1237,8 +1529,8 @@ QSlider::handle:vertical {
    <slot>arm_1()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1021</x>
-     <y>363</y>
+     <x>1044</x>
+     <y>240</y>
     </hint>
     <hint type="destinationlabel">
      <x>897</x>
@@ -1253,8 +1545,8 @@ QSlider::handle:vertical {
    <slot>arm_2()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1080</x>
-     <y>367</y>
+     <x>1128</x>
+     <y>244</y>
     </hint>
     <hint type="destinationlabel">
      <x>979</x>
@@ -1269,8 +1561,8 @@ QSlider::handle:vertical {
    <slot>slide_x_minus()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1018</x>
-     <y>567</y>
+     <x>1030</x>
+     <y>561</y>
     </hint>
     <hint type="destinationlabel">
      <x>895</x>
@@ -1285,8 +1577,8 @@ QSlider::handle:vertical {
    <slot>slide_x_plus()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1018</x>
-     <y>106</y>
+     <x>1034</x>
+     <y>88</y>
     </hint>
     <hint type="destinationlabel">
      <x>793</x>
@@ -1301,8 +1593,8 @@ QSlider::handle:vertical {
    <slot>slide_y_plus()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1077</x>
-     <y>106</y>
+     <x>1117</x>
+     <y>88</y>
     </hint>
     <hint type="destinationlabel">
      <x>983</x>
@@ -1317,8 +1609,8 @@ QSlider::handle:vertical {
    <slot>slide_y_minus()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1077</x>
-     <y>567</y>
+     <x>1109</x>
+     <y>561</y>
     </hint>
     <hint type="destinationlabel">
      <x>963</x>
@@ -1333,8 +1625,8 @@ QSlider::handle:vertical {
    <slot>set_reset()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1207</x>
-     <y>567</y>
+     <x>1210</x>
+     <y>372</y>
     </hint>
     <hint type="destinationlabel">
      <x>139</x>
@@ -1349,8 +1641,8 @@ QSlider::handle:vertical {
    <slot>mode_auto()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>135</x>
-     <y>166</y>
+     <x>155</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
      <x>866</x>
@@ -1365,8 +1657,8 @@ QSlider::handle:vertical {
    <slot>mode_manual()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>154</x>
-     <y>472</y>
+     <x>155</x>
+     <y>330</y>
     </hint>
     <hint type="destinationlabel">
      <x>715</x>
@@ -1397,8 +1689,8 @@ QSlider::handle:vertical {
    <slot>web_prev()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>142</x>
-     <y>98</y>
+     <x>88</x>
+     <y>47</y>
     </hint>
     <hint type="destinationlabel">
      <x>120</x>
@@ -1413,8 +1705,8 @@ QSlider::handle:vertical {
    <slot>web_refresh()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>322</x>
-     <y>98</y>
+     <x>259</x>
+     <y>47</y>
     </hint>
     <hint type="destinationlabel">
      <x>262</x>
@@ -1429,8 +1721,8 @@ QSlider::handle:vertical {
    <slot>web_go()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1210</x>
-     <y>98</y>
+     <x>1154</x>
+     <y>47</y>
     </hint>
     <hint type="destinationlabel">
      <x>1245</x>
@@ -1445,8 +1737,8 @@ QSlider::handle:vertical {
    <slot>web_next()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>233</x>
-     <y>98</y>
+     <x>174</x>
+     <y>47</y>
     </hint>
     <hint type="destinationlabel">
      <x>76</x>
@@ -1493,76 +1785,12 @@ QSlider::handle:vertical {
    <slot>target_grab()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>827</x>
-     <y>100</y>
+     <x>867</x>
+     <y>196</y>
     </hint>
     <hint type="destinationlabel">
      <x>687</x>
      <y>370</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btn_cam_up</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>slide_cam_plus()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>916</x>
-     <y>96</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>527</x>
-     <y>47</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btn_grab_minus</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>slide_grab_minus()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>447</x>
-     <y>534</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>372</x>
-     <y>644</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btn_grab_plus</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>slide_grab_plus()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>824</x>
-     <y>538</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>636</x>
-     <y>643</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btn_turn_right</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>slide_turn_plus()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>841</x>
-     <y>590</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>693</x>
-     <y>620</y>
     </hint>
    </hints>
   </connection>
@@ -1573,12 +1801,28 @@ QSlider::handle:vertical {
    <slot>slide_cam_minus()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>907</x>
-     <y>552</y>
+     <x>925</x>
+     <y>532</y>
     </hint>
     <hint type="destinationlabel">
      <x>844</x>
      <y>644</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_cam_up</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slide_cam_plus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>923</x>
+     <y>58</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>915</x>
+     <y>23</y>
     </hint>
    </hints>
   </connection>
@@ -1589,12 +1833,60 @@ QSlider::handle:vertical {
    <slot>slide_turn_minus()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>459</x>
-     <y>581</y>
+     <x>443</x>
+     <y>614</y>
     </hint>
     <hint type="destinationlabel">
-     <x>469</x>
-     <y>642</y>
+     <x>365</x>
+     <y>650</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_arm_right</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>slide_turn_plus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>843</x>
+     <y>609</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>706</x>
+     <y>649</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_set_reset</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setting_reset()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>511</x>
+     <y>574</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>70</x>
+     <y>645</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_set_save</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setting_save()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>852</x>
+     <y>587</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1239</x>
+     <y>594</y>
     </hint>
    </hints>
   </connection>
@@ -1630,9 +1922,9 @@ QSlider::handle:vertical {
   <slot>select_agv2()</slot>
   <slot>slide_cam_minus()</slot>
   <slot>slide_cam_plus()</slot>
-  <slot>slide_grab_minus()</slot>
-  <slot>slide_grab_plus()</slot>
-  <slot>slide_turn_minus()</slot>
   <slot>slide_turn_plus()</slot>
+  <slot>slide_turn_minus()</slot>
+  <slot>setting_reset()</slot>
+  <slot>setting_save()</slot>
  </slots>
 </ui>
